@@ -1,0 +1,15 @@
+{
+    "name": "com.ubuntu.developer.username.indonat",
+    "description": "description of InDonat",
+    "framework": "ubuntu-sdk-14.04-qml-dev1",
+    "architecture": "all",
+    "title": "InDonat",
+    "hooks": {
+        "InDonat": {
+            "apparmor": "InDonat.json",
+            "desktop": "InDonat.desktop"
+        }
+    },
+    "version": "0.1",
+    "maintainer": ""
+}

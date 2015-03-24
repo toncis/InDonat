@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FrmZahtjeviNemoguci</class>
+ <widget class="QDialog" name="FrmZahtjeviNemoguci">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>908</width>
+    <height>632</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>8</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Donat - Zahtjevi Nemogući</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../../resources/DonatForm.qrc">
+    <normaloff>:/InDonat/Forms/images/App.ico</normaloff>:/InDonat/Forms/images/App.ico</iconset>
+  </property>
+  <property name="locale">
+   <locale language="Croatian" country="Croatia"/>
+  </property>
+ </widget>
+ <resources>
+  <include location="../../resources/DonatForm.qrc"/>
+ </resources>
+ <connections/>
+</ui>
