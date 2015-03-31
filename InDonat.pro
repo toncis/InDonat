@@ -219,3 +219,7 @@ LIBS += -L/$$(ORACLE_HOME)/lib -locci
 LIBS += -L/usr/local/lib -lclntsh
 
 INCLUDEPATH += $$quote($$(ORACLE_HOME)/include)
+
+OTHER_FILES += \
+    LICENSE \
+    README.md
