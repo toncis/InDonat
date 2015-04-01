@@ -1,24 +1,24 @@
-/************************************* Module Header **************************************\
-* Module Name:  frmzahtjevipregled.cpp
-* Project:      InDonat - Donat client
-* Copyright (c) IN2 d.o.o.
-* http://www.in2.hr
-*
-* This file contains the implementations of DONAT pregled zahtjeva form
-*
-* For more information see the Books Online and documentation.
-* *****************************************************************************************
-* All rights reserved.
-* THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY
-* OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT
-* LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
-* FITNESS FOR A PARTICULAR PURPOSE.
-* * *****************************************************************************************
-* Release History :
-*
-* VERSION	DESCRIPTION
-* 	1.0		Created by Tonci Svilicic
-\******************************************************************************************/
+//
+//  frmzahtjevipregled.cpp
+//
+//  Author:
+//       Tonči Sviličić <tonci.svilicic@in2.hr>
+//
+//  Copyright (c) 2012 Tonči Sviličić
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 #include "frmzahtjevipregled.h"
 #include "ui_frmzahtjevipregled.h"

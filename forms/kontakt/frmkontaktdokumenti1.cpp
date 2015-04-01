@@ -1,3 +1,25 @@
+//
+//  kontaktdokument1.cpp
+//
+//  Author:
+//       Tonči Sviličić <tonci.svilicic@in2.hr>
+//
+//  Copyright (c) 2012 Tonči Sviličić
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #include "frmkontaktdokumenti1.h"
 #include "ui_frmkontaktdokumenti1.h"
 
@@ -215,10 +237,10 @@ void FrmKontaktDokumenti1::popuniKontaktDokumente()
             QTreeWidgetItem *itemDokument = new QTreeWidgetItem();
 
             string strDatum, strLozinka;
-            int iStatus;
+            //int iStatus;
             strLozinka = rs->getString(4);
             strDatum = rs->getString(7);
-            iStatus = rs->getInt(6);
+            //iStatus = rs->getInt(6);
 
             if(strDatum == "-")
             {
@@ -578,8 +600,8 @@ void FrmKontaktDokumenti1::on_btnOtvoriDokument_clicked()
 
                const unsigned int BUFSIZE=blobFile.length();
                char *buffer[BUFSIZE];
-               unsigned int readAmt=BUFSIZE;
-               unsigned int offset=1;
+//               unsigned int readAmt=BUFSIZE;
+//               unsigned int offset=1;
 
                //reading readAmt bytes from offset 1
                //blobFile.read(readAmt, buffer, BUFSIZE, offset);
