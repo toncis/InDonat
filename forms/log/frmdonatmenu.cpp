@@ -45,6 +45,7 @@
 #include "forms/sporazumi/frmgrupaimovineatributi.h"
 #include "forms/sporazumi/frmbundleinfo.h"
 #include "forms/sporazumi/frmsuspenzija.h"
+#include "forms/sporazumi/frmpregledn.h"
 
 #include "forms/stranka/frmstrankaocv.h"
 #include "forms/stranka/frmstrankafiz.h"
@@ -3660,6 +3661,17 @@ void FrmDonatMenu::on_btnMnuObavijestPoslane_clicked()
     frmDonatObavijestiPoslane->exec();
     delete frmDonatObavijestiPoslane;
 }
+void FrmDonatMenu::on_btnMnuPregledPregledN_clicked()
+{
+    // Show Donat pregled zahtjeva newr
+    Sporazumi::FrmPregledN *frmDonatZahtjeviPregledN = new Sporazumi::FrmPregledN(this);
+    frmDonatZahtjeviPregledN->exec();
+    delete frmDonatZahtjeviPregledN;
+}
+void FrmDonatMenu::on_btnMnuPregledPregledKon_clicked()
+{
+
+}
 void FrmDonatMenu::on_btnMnuZahtjevMax23_clicked()
 {
 //    if(m_iKupacId == 0)
@@ -3852,6 +3864,5 @@ void FrmDonatMenu::on_btnMnuZlonamjerniPregled_clicked()
 //    frmZlonamjerniPregled->show();
 }
 
-
-
 }
+

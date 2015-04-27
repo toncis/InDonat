@@ -185,6 +185,10 @@ private slots:
 
     void on_btnMnuZlonamjerniUnosMob_clicked();
 
+    void on_btnMnuPregledPregledN_clicked();
+
+    void on_btnMnuPregledPregledKon_clicked();
+
 private:
     Ui::FrmDonatMenu *ui;
 

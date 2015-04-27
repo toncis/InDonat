@@ -86,7 +86,8 @@ SOURCES += main.cpp\
     forms/kontakt/zlonamjerni/frmzlonamjernimobadd.cpp \
     forms/stranka/frmmdm1.cpp \
     forms/stranka/frmmdm2.cpp \
-    forms/stranka/frmmdm3.cpp
+    forms/stranka/frmmdm3.cpp \
+    forms/sporazumi/frmpregledn.cpp
 
 HEADERS  += mainwindow.h \
     forms/log/frmdonatlogin.h \
@@ -158,7 +159,8 @@ HEADERS  += mainwindow.h \
     forms/kontakt/zlonamjerni/frmzlonamjernimobadd.h \
     forms/stranka/frmmdm1.h \
     forms/stranka/frmmdm2.h \
-    forms/stranka/frmmdm3.h
+    forms/stranka/frmmdm3.h \
+    forms/sporazumi/frmpregledn.h
 
 FORMS    += mainwindow.ui \
     forms/log/frmdonatlogin.ui \
@@ -208,7 +210,8 @@ FORMS    += mainwindow.ui \
     forms/kontakt/zlonamjerni/frmzlonamjernimobadd.ui \
     forms/stranka/frmmdm1.ui \
     forms/stranka/frmmdm2.ui \
-    forms/stranka/frmmdm3.ui
+    forms/stranka/frmmdm3.ui \
+    forms/sporazumi/frmpregledn.ui
 
 RESOURCES += \
     resources/DonatForm.qrc

@@ -167,5 +167,7 @@
         <file>images/dolla.gif</file>
         <file>images/CHECK1.gif</file>
         <file>images/CHECK2.gif</file>
+        <file>images/formatting_bar2.gif</file>
+        <file>images/icon_bullets_over.gif</file>
     </qresource>
 </RCC>
