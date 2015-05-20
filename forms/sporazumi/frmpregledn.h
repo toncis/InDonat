@@ -23,6 +23,7 @@
 #define FRMPREGLEDN_H
 
 #include <QDialog>
+#include <QTreeWidgetItem>
 #include "donat.h"
 
 namespace Ui {
@@ -44,8 +45,55 @@ private slots:
 
     void on_btnPromjenaKanalaProdaje_clicked();
 
+    void on_cboPretragaKlase_currentIndexChanged(int index);
+
+    void on_btnZahtjevUnio_clicked();
+
+    void on_btnZahtjevProdao_clicked();
+
+    void on_btnKanalProdaje_clicked();
+
+    void on_btnRegija_clicked();
+
+    void on_btnDonatUser_clicked();
+
+    void on_btnZahtjev_clicked();
+
+    void on_btnUgovor_clicked();
+
+    void on_btnObavijest_clicked();
+
+    void on_btnSme_clicked();
+
+    void on_btnPretragaPrivatni_clicked();
+
+    void on_btnPretragaKljucni_clicked();
+
+    void on_btnPretragatSme_clicked();
+
+    void on_btnPretragaVeleprodaja_clicked();
+
+    void on_treeListeGrupa_itemPressed(QTreeWidgetItem *item, int column);
+
 private:
     Ui::FrmPregledN *ui;
+
+    unsigned int m_iSporazumId;
+    int m_iListaGrupa;
+    int m_iTipKorisnika;
+    int m_iTipKanala;
+    int m_iTipKupca;
+    int m_iTipFiltra;
+    int m_iFltLinijaProdukataId;
+
+    void initForm();
+    void initSporazum();
+    void initSlog();
+    void setKorisnik();
+    void popunaKlasa();
+    void popunaListaGrupa();
+    void addNewGrupaToListGrupe(QList<QTreeWidgetItem *> listListaGrupa, QTreeWidgetItem *itemGrupa);
+
 };
 
 } // namespace sporazumi

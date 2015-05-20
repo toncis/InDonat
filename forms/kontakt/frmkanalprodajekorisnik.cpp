@@ -55,7 +55,7 @@ void FrmKanalProdajeKorisnik::popunaKorisnik()
 {
     ui->treeKorisnik->clear();
 
-    if(ui->txtFltDonatUser->text().length() < 2)
+    if(ui->txtFltDonatUser->text().length() < 3)
     {
         return;
     }

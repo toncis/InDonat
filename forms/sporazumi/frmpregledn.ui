@@ -490,7 +490,7 @@
              <number>1</number>
             </property>
             <item>
-             <widget class="QTreeWidget" name="treeWidget">
+             <widget class="QTreeWidget" name="treeListeGrupa">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -505,12 +505,58 @@
               <property name="headerHidden">
                <bool>true</bool>
               </property>
+              <property name="columnCount">
+               <number>9</number>
+              </property>
+              <attribute name="headerVisible">
+               <bool>false</bool>
+              </attribute>
               <attribute name="headerMinimumSectionSize">
                <number>50</number>
               </attribute>
               <column>
                <property name="text">
                 <string notr="true">1</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">2</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">3</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">4</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">5</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">6</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">7</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">8</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">9</string>
                </property>
               </column>
              </widget>
@@ -685,6 +731,9 @@
               <property name="text">
                <string>KAN</string>
               </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
               <property name="autoExclusive">
                <bool>true</bool>
               </property>
@@ -730,6 +779,9 @@
               </property>
               <property name="text">
                <string>REG</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
               </property>
               <property name="autoExclusive">
                <bool>true</bool>
@@ -977,7 +1029,7 @@
                      <string>Identifikacija korisnika</string>
                     </property>
                     <property name="text">
-                     <string>KLUČNI</string>
+                     <string>KLJUČNI</string>
                     </property>
                     <property name="checkable">
                      <bool>true</bool>
@@ -1190,7 +1242,7 @@
                   <item>
                    <widget class="QLineEdit" name="txtSearchParam">
                     <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                       <horstretch>0</horstretch>
                       <verstretch>0</verstretch>
                      </sizepolicy>
@@ -1821,7 +1873,7 @@
                    <number>1</number>
                   </property>
                   <item>
-                   <widget class="QTreeWidget" name="treeSifre_4">
+                   <widget class="QTreeWidget" name="treeSporazumi">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                       <horstretch>0</horstretch>
@@ -2556,6 +2608,12 @@
             </item>
             <item>
              <widget class="QFrame" name="frame_11">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="frameShape">
                <enum>QFrame::NoFrame</enum>
               </property>
@@ -2614,6 +2672,12 @@
                </item>
                <item>
                 <widget class="QFrame" name="frame_19">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
                  </property>
@@ -2695,7 +2759,7 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QDateEdit" name="dateEdit">
+                      <widget class="QDateEdit" name="dateOd">
                        <property name="displayFormat">
                         <string>dd.MM.yyyy</string>
                        </property>
@@ -2766,7 +2830,7 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QDateEdit" name="dateEdit_2">
+                      <widget class="QDateEdit" name="dateDo">
                        <property name="displayFormat">
                         <string>dd.MM.yyyy</string>
                        </property>
@@ -3671,7 +3735,7 @@
                 <number>0</number>
                </property>
                <item>
-                <widget class="QTreeWidget" name="treeSifre">
+                <widget class="QTreeWidget" name="treeSporazumStavke">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -5323,7 +5387,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QDateTimeEdit" name="dateTimeEdit">
+             <widget class="QDateTimeEdit" name="dateAktivnosti">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>

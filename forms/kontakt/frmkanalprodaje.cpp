@@ -63,13 +63,21 @@ FrmKanalProdaje::FrmKanalProdaje(int iFormActivity, QWidget *parent) :
             }
         case 2:
             {
-                this->setWindowTitle(tr("Kanal Prodaje"));
+                this->setWindowTitle(tr("Kanal Prodaje - Prodajni Kanal"));
                 ui->btnKanalProdaje->setText(tr("KANAL PRODAJE"));
-                m_KanalProdajeMode = KanalProdajeFilter;
-                popuniZaKanalProdaje();
+                m_KanalProdajeMode = KanalProdajeProdajniKanal;
+                popuniZaKanalProdajeProdajniKanal();
                 break;
             }
         case 3:
+            {
+                this->setWindowTitle(tr("Kanal Prodaje - Regija"));
+                ui->btnKanalProdaje->setText(tr("REGIJA"));
+                m_KanalProdajeMode = KanalProdajeRegija;
+                popuniZaKanalProdajeRegija();
+                break;
+            }
+        case 4:
             {
                 this->setWindowTitle(tr("Kanal Prodaje - Promjena Na zahtjevu"));
                 ui->btnKanalProdaje->setText(tr("PROMJENA NA ZAHTJEVU"));
@@ -104,6 +112,42 @@ void FrmKanalProdaje::popuniZaKanalProdaje()
     ui->txtOrganizacijskaJedinica->setText(QString::fromStdString(g_FILTER_ORGJED_NAZ));
     ui->txtKorisnik->setText(QString::fromStdString(g_FILTER_KORISNIK_NAZ));
 
+//    ui->btnFilter->clicked(true);
+}
+void FrmKanalProdaje::popuniZaKanalProdajeProdajniKanal()
+{
+    m_iRegijaId = g_FILTER_REGIJA_ID;
+    m_iZupanijaId = g_FILTER_ZUPANIJA_ID;
+    m_iKanalId = g_FILTER_KANAL_ID;
+    m_iOrganizacijskaJedinicaId = g_FILTER_ORGJED_ID;
+    m_strKorisdikId = g_FILTER_KORISNIK_ID;
+    ui->txtRegija->setText(QString::fromStdString(g_FILTER_REGIJA_NAZ));
+    ui->txtZupanija->setText(QString::fromStdString(g_FILTER_ZUPANIJA_NAZ));
+    ui->txtKanalProdaje->setText(QString::fromStdString(g_FILTER_KANAL_NAZ));
+    ui->txtOrganizacijskaJedinica->setText(QString::fromStdString(g_FILTER_ORGJED_NAZ));
+    ui->txtKorisnik->setText(QString::fromStdString(g_FILTER_KORISNIK_NAZ));
+    //set font
+    QFont font = ui->lblKanalProdaje->font();
+    font.setBold(true);
+    ui->lblKanalProdaje->setFont(font);
+//    ui->btnFilter->clicked(true);
+}
+void FrmKanalProdaje::popuniZaKanalProdajeRegija()
+{
+    m_iRegijaId = g_FILTER_REGIJA_ID;
+    m_iZupanijaId = g_FILTER_ZUPANIJA_ID;
+    m_iKanalId = g_FILTER_KANAL_ID;
+    m_iOrganizacijskaJedinicaId = g_FILTER_ORGJED_ID;
+    m_strKorisdikId = g_FILTER_KORISNIK_ID;
+    ui->txtRegija->setText(QString::fromStdString(g_FILTER_REGIJA_NAZ));
+    ui->txtZupanija->setText(QString::fromStdString(g_FILTER_ZUPANIJA_NAZ));
+    ui->txtKanalProdaje->setText(QString::fromStdString(g_FILTER_KANAL_NAZ));
+    ui->txtOrganizacijskaJedinica->setText(QString::fromStdString(g_FILTER_ORGJED_NAZ));
+    ui->txtKorisnik->setText(QString::fromStdString(g_FILTER_KORISNIK_NAZ));
+    //set font
+    QFont font = ui->lblRegijaTitle->font();
+    font.setBold(true);
+    ui->lblRegijaTitle->setFont(font);
 //    ui->btnFilter->clicked(true);
 }
 void FrmKanalProdaje::popuniZaPregledzahtjeva()

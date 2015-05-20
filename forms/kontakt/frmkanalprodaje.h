@@ -84,7 +84,9 @@ private:
     enum KanalProdajeMode
     {
         KanalProdajeFilter = 0,
-        KanalProdajeKorisnik = 1
+        KanalProdajeProdajniKanal = 1,
+        KanalProdajeRegija = 2,
+        KanalProdajeKorisnik = 3
     };
 
     KanalProdajeMode m_KanalProdajeMode;
@@ -99,6 +101,8 @@ private:
 
     void popuniZaPregledzahtjeva();
     void popuniZaKanalProdaje();
+    void popuniZaKanalProdajeProdajniKanal();
+    void popuniZaKanalProdajeRegija();
     void popuniZaPromjenuNaZahtjevu();
     void popuniRegiju();
     void popuniZupaniju();
