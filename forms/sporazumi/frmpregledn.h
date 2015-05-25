@@ -78,7 +78,12 @@ private slots:
 private:
     Ui::FrmPregledN *ui;
 
+    int m_iNoDef;
+
     unsigned int m_iSporazumId;
+    unsigned int m_iStrankaId;
+    unsigned int m_iKupacId;
+
     int m_iListaGrupa;
     int m_iTipKorisnika;
     int m_iTipKanala;
@@ -86,12 +91,24 @@ private:
     int m_iTipFiltra;
     int m_iFltLinijaProdukataId;
 
+    int m_iListaTipId;
+    string m_strListaValue;
+    int m_iListaSub;
+    int m_iListaSel;
+
     void initForm();
     void initSporazum();
     void initSlog();
     void setKorisnik();
     void popunaKlasa();
     void popunaListaGrupa();
+    void pokreniPretrazivanje();
+    void popunaZahtjevaL1();
+    void popunaZahtjevaL2();
+    void popunaUgovoraL1();
+    void popunaUgovoraL2();
+    void popunaObavijestL1();
+
     void addNewGrupaToListGrupe(QList<QTreeWidgetItem *> listListaGrupa, QTreeWidgetItem *itemGrupa);
 
 };

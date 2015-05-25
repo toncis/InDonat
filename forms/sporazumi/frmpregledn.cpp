@@ -64,6 +64,16 @@ void FrmPregledN::initForm()
     ui->treeListeGrupa->hideColumn(7);
     ui->treeListeGrupa->hideColumn(8);
 
+    ui->treeSporazumi->setColumnWidth(0, 800);
+    ui->treeSporazumi->hideColumn(1);
+    ui->treeSporazumi->hideColumn(2);
+    ui->treeSporazumi->hideColumn(3);
+    ui->treeSporazumi->hideColumn(4);
+    ui->treeSporazumi->hideColumn(5);
+    ui->treeSporazumi->hideColumn(6);
+
+    m_iNoDef = 1001;
+
     m_iSporazumId = 0;
     m_iListaGrupa = 1;
     m_iTipKorisnika = 1;
@@ -91,6 +101,24 @@ void FrmPregledN::initForm()
 
     popunaKlasa();
     popunaListaGrupa();
+}
+void FrmPregledN::initSporazum()
+{
+    m_iSporazumId = 0;
+    m_iStrankaId = 0;
+    m_iKupacId = 0;
+
+    ui->treeSporazumStavke->clear();
+    ui->treeAktivnosti->clear();
+    ui->treeStavke->clear();
+
+    ui->lblZahtjevFullTitle->clear();
+    ui->lblKupacId->clear();
+    ui->lblKupacNaziv->clear();
+
+}
+void FrmPregledN::initSlog()
+{
 }
 
 void FrmPregledN::setKorisnik()
@@ -162,7 +190,6 @@ void FrmPregledN::popunaListaGrupa()
 
     QList<QTreeWidgetItem *> listListaGrupa;
 
-
     string strSqlStatement;
     strSqlStatement.append("SELECT P.ID, P.NAD_ID, P.NIVO, P.NAZIV, P.TIP, P.VALUE, P.GRUPA, P.AKT_SUB, P.AKT_SEL ");
     strSqlStatement.append("FROM KONTAKT_S_PREGLED P ");
@@ -228,10 +255,11 @@ void FrmPregledN::popunaListaGrupa()
     {
         listListaGrupa.first()->setSelected(true);
         ui->treeListeGrupa->insertTopLevelItems(0, listListaGrupa);
+        //ui->treeListeGrupa->expandAll();
+        ui->treeListeGrupa->collapseAll();
+        ui->treeListeGrupa->expandItem(listListaGrupa.first());
         ui->treeListeGrupa->setCurrentItem(listListaGrupa.first());
-        ui->treeListeGrupa->expandAll();
     }
-
 }
 void FrmPregledN::addNewGrupaToListGrupe(QList<QTreeWidgetItem *> listListaGrupa, QTreeWidgetItem *itemGrupa)
 {
@@ -256,6 +284,201 @@ void FrmPregledN::addNewGrupaToListGrupe(QList<QTreeWidgetItem *> listListaGrupa
             listListaGrupa.append(itemGrupa);
         }
     }
+}
+
+void FrmPregledN::pokreniPretrazivanje()
+{
+    ui->treeSporazumi->clear();
+    ui->lblFilterTtile->setText(tr("FILTER ... UPIT"));
+    initSporazum();
+
+    switch (m_iListaGrupa)
+    {
+        case 1:
+        {
+            switch (m_iListaTipId)
+            {
+                case 1:
+                    popunaZahtjevaL1();
+                    break;
+                case 2:
+                    popunaZahtjevaL2();
+                    break;
+                case 3:
+                    break;
+                default:
+                    break;
+            }
+            break;
+        }
+        case 2:
+        {
+            switch (m_iListaTipId)
+            {
+                case 1:
+                    popunaUgovoraL1();
+                    break;
+                case 2:
+                    popunaUgovoraL2();
+                    break;
+                case 3:
+                    break;
+                default:
+                    break;
+            }
+            break;
+        }
+        case 3:
+        {
+            switch (m_iListaTipId)
+            {
+                case 1:
+                    popunaObavijestL1();
+                    break;
+                case 2:
+                    //popunaObavijestL2();
+                    break;
+                case 3:
+                    //popunaObavijestL3();
+                    break;
+                default:
+                    break;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}
+void FrmPregledN::popunaZahtjevaL1()
+{
+    ui->treeSporazumi->clear();
+
+    QList<QTreeWidgetItem *> listSporazumi;
+
+    string strSqlStatement;
+
+    strSqlStatement.append("SELECT /*+ TAB_SP_IDX_1 */ ");
+    strSqlStatement.append(" ROWNUM, SPORAZUM_ID, TO_CHAR(DATUM_OD,'DD.MM.YYYY') DATUM, FORMATIRANI_NAZIV, ADRESA, BROJ_DOK ");
+    strSqlStatement.append(" FROM TAB_PREGLED_SPORAZUMI WHERE ");
+    strSqlStatement.append(" DATUM_OD BETWEEN TO_DATE('");
+    strSqlStatement.append(ui->dateOd->date().toString("dd.MM.yyyy").toStdString());
+    strSqlStatement.append("', 'DD.MM.YYYY') ");
+    strSqlStatement.append(" AND TO_DATE('");
+    strSqlStatement.append(ui->dateDo->date().toString("dd.MM.yyyy").toStdString());
+    strSqlStatement.append("', 'DD.MM.YYYY') ");
+    strSqlStatement.append(" AND TSPORAZUMA_ID IN (1, 4, 7, 8, 11, 12) ");
+    strSqlStatement.append(" AND KLJUCNI_IND = ");
+    strSqlStatement.append(cttl::itos(m_iTipKupca));
+
+    if (m_strListaValue == "0")
+    {
+        strSqlStatement.append(" AND STATUS_ID != 0 ");
+    }
+    else
+    {
+        strSqlStatement.append(" AND STATUS_ID IN (");
+        strSqlStatement.append(m_strListaValue);
+        strSqlStatement.append(")");
+    }
+
+    if (m_iTipKanala == 1)
+    {
+        strSqlStatement.append(" AND KANAL_ID = ");
+        strSqlStatement.append(cttl::itos(g_UNIO_KANAL_ID));
+        if (g_UNIO_ORGJED_ID > 0)
+        {
+            strSqlStatement.append(" AND ORGJED_ID = ");
+            strSqlStatement.append(cttl::itos(g_UNIO_ORGJED_ID));
+        }
+        if (g_UNIO_KORISNIK_ID != "0")
+        {
+            if(m_iTipKorisnika == 1)
+            {
+                strSqlStatement.append(" AND OPERATER = ");
+                strSqlStatement.append(g_UNIO_KORISNIK_ID);
+            }
+            else
+            {
+                strSqlStatement.append(" AND KORISNIK_ID = ");
+                strSqlStatement.append(g_UNIO_KORISNIK_ID);
+            }
+        }
+    }
+    else
+    {
+        strSqlStatement.append(" AND REGIJA_ID = ");
+        strSqlStatement.append(cttl::itos(g_UNIO_REGIJA_ID));
+        strSqlStatement.append(" AND ZUPANIJA_ID = ");
+        strSqlStatement.append(cttl::itos(g_UNIO_ZUPANIJA_ID));
+    }
+
+    if (m_iFltLinijaProdukataId != 0)
+    {
+        strSqlStatement.append(" AND KLASA ='");
+        strSqlStatement.append(cttl::itos(m_iFltLinijaProdukataId));
+        strSqlStatement.append("' ");
+    }
+
+    strSqlStatement.append(" AND ROWNUM < ");
+    strSqlStatement.append(cttl::itos(m_iNoDef));
+
+    Statement *sqlStatement = g_DonatConn->createStatement();
+    sqlStatement->setSQL(strSqlStatement);
+
+    try
+    {
+        ResultSet *rs = sqlStatement->executeQuery();
+
+        while(rs->next())
+        {
+            QTreeWidgetItem *itemSporazum = new QTreeWidgetItem();
+            itemSporazum->setText(0, QString::fromStdString(rs->getString(4)));
+            itemSporazum->setText(1, QString::number(rs->getInt(1)));
+            itemSporazum->setText(2, QString::number(rs->getInt(2)));
+            itemSporazum->setText(3, QString::number(rs->getInt(3)));
+            itemSporazum->setText(4, QString::number(rs->getInt(5)));
+            itemSporazum->setText(5, QString::fromStdString(rs->getString(6)));
+            itemSporazum->setText(6, QString::number(rs->getInt(7)));
+            itemSporazum->setText(7, QString::number(rs->getInt(8)));
+            itemSporazum->setText(8, QString::number(rs->getInt(9)));
+            listSporazumi.append(itemSporazum);
+        }
+
+        sqlStatement->closeResultSet(rs);
+    }
+    catch(SQLException &ex)
+    {
+        QMessageBox::critical(this, tr("DONAT - Database Error"),
+                                       QString::fromStdString(ex.getMessage()),
+                                       QMessageBox::Close);
+    }
+
+    g_DonatConn->terminateStatement(sqlStatement);
+    strSqlStatement.erase();
+
+    if(!listSporazumi.empty())
+    {
+        listSporazumi.first()->setSelected(true);
+        ui->treeSporazumi->insertTopLevelItems(0, listSporazumi);
+        ui->treeSporazumi->expandAll();
+//        ui->treeSporazumi->collapseAll();
+//        ui->treeSporazumi->expandItem(listSporazumi.first());
+//        ui->treeSporazumi->setCurrentItem(listSporazumi.first());
+    }
+
+}
+void FrmPregledN::popunaZahtjevaL2()
+{
+}
+void FrmPregledN::popunaUgovoraL1()
+{
+}
+void FrmPregledN::popunaUgovoraL2()
+{
+}
+void FrmPregledN::popunaObavijestL1()
+{
 }
 
 // [Event Handlers]
@@ -384,27 +607,44 @@ void FrmPregledN::on_btnSme_clicked()
 
 void FrmPregledN::on_btnPretragaPrivatni_clicked()
 {
-
+    m_iTipKupca = 1;
+    pokreniPretrazivanje();
 }
 
 void FrmPregledN::on_btnPretragaKljucni_clicked()
 {
-
+    m_iTipKupca = 2;
+    pokreniPretrazivanje();
 }
 
 void FrmPregledN::on_btnPretragatSme_clicked()
 {
-
+    m_iTipKupca = 3;
+    pokreniPretrazivanje();
 }
 
 void FrmPregledN::on_btnPretragaVeleprodaja_clicked()
 {
-
+    m_iTipKupca = 4;
+    pokreniPretrazivanje();
 }
 
 void FrmPregledN::on_treeListeGrupa_itemPressed(QTreeWidgetItem *item, int UNUSED(column))
 {
-
+    if(item->childCount() > 0)
+    {
+        //ui->treeListeGrupa->expandAll();
+        ui->treeListeGrupa->collapseAll();
+        ui->treeListeGrupa->expandItem(item);
+    }
+    else
+    {
+        m_iListaTipId = item->text(4).toInt();
+        m_strListaValue = item->text(0).toStdString();
+        m_iListaSub = item->text(7).toInt();
+        m_iListaSel = item->text(8).toInt();
+        pokreniPretrazivanje();
+    }
 }
 
 void FrmPregledN::on_cboPretragaKlase_currentIndexChanged(int index)
