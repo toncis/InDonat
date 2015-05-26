@@ -80,6 +80,7 @@ void FrmPregledN::initForm()
     m_iTipKanala = 1;
     m_iTipKupca = 0;
     m_iTipFiltra = 0;
+    m_iTipDodatnogFiltra = 0;
 
     ui->btnKanalProdaje->setChecked(true);
     ui->btnRegija->setChecked(false);
@@ -97,7 +98,7 @@ void FrmPregledN::initForm()
     ui->btnPretragatSme->setChecked(false);
     ui->btnPretragaVeleprodaja->setChecked(false);
 
-    ui->btnKorisnikKanal->setText(QString::fromStdString(g_UNIO_KANAL_NAZ) + tr(" ... ") + QString::fromStdString(g_UNIO_ORGJED_NAZ) + tr(" ... ") + QString::fromStdString(g_UNIO_KORISNIK_NAZ));
+    ui->btnKorisnikKanal->setText(QString::fromStdString(g_FILTER_KANAL_NAZ) + tr(" ... ") + QString::fromStdString(g_FILTER_ORGJED_NAZ) + tr(" ... ") + QString::fromStdString(g_FILTER_KORISNIK_NAZ));
 
     popunaKlasa();
     popunaListaGrupa();
@@ -125,7 +126,7 @@ void FrmPregledN::setKorisnik()
 {
     if(m_iTipKanala == 1)
     {
-        ui->btnKorisnikKanal->setText(QString::fromStdString(g_UNIO_KANAL_NAZ) + tr(" ... ") + QString::fromStdString(g_UNIO_ORGJED_NAZ) + tr(" ... ") + QString::fromStdString(g_UNIO_KORISNIK_NAZ));
+        ui->btnKorisnikKanal->setText(QString::fromStdString(g_FILTER_KANAL_NAZ) + tr(" ... ") + QString::fromStdString(g_FILTER_ORGJED_NAZ) + tr(" ... ") + QString::fromStdString(g_FILTER_KORISNIK_NAZ));
         if(m_iTipKorisnika == 0)
         {
             m_iTipKorisnika = 1;
@@ -133,7 +134,7 @@ void FrmPregledN::setKorisnik()
             ui->btnZahtjevProdao->setChecked(false);
         }
 
-        if(g_UNIO_KORISNIK_ID == "0")
+        if(g_FILTER_KORISNIK_ID == "0")
         {
             m_iTipKorisnika = 0;
             ui->btnZahtjevUnio->setChecked(false);
@@ -142,7 +143,7 @@ void FrmPregledN::setKorisnik()
     }
     else if(m_iTipKanala == 2)
     {
-        ui->btnKorisnikKanal->setText(QString::fromStdString(g_UNIO_REGIJA_NAZ) + tr(" ... ") + QString::fromStdString(g_UNIO_ZUPANIJA_NAZ));
+        ui->btnKorisnikKanal->setText(QString::fromStdString(g_FILTER_REGIJA_NAZ) + tr(" ... ") + QString::fromStdString(g_FILTER_ZUPANIJA_NAZ));
         m_iTipKorisnika = 0;
         ui->btnZahtjevUnio->setChecked(false);
         ui->btnZahtjevProdao->setChecked(false);
@@ -288,6 +289,8 @@ void FrmPregledN::addNewGrupaToListGrupe(QList<QTreeWidgetItem *> listListaGrupa
 
 void FrmPregledN::pokreniPretrazivanje()
 {
+    setCursor(Qt::BusyCursor);
+
     ui->treeSporazumi->clear();
     ui->lblFilterTtile->setText(tr("FILTER ... UPIT"));
     initSporazum();
@@ -349,6 +352,8 @@ void FrmPregledN::pokreniPretrazivanje()
         default:
             break;
     }
+
+    setCursor(Qt::ArrowCursor);
 }
 void FrmPregledN::popunaZahtjevaL1()
 {
@@ -359,7 +364,7 @@ void FrmPregledN::popunaZahtjevaL1()
     string strSqlStatement;
 
     strSqlStatement.append("SELECT /*+ TAB_SP_IDX_1 */ ");
-    strSqlStatement.append(" ROWNUM, SPORAZUM_ID, TO_CHAR(DATUM_OD,'DD.MM.YYYY') DATUM, FORMATIRANI_NAZIV, ADRESA, BROJ_DOK ");
+    strSqlStatement.append(" ROWNUM, SPORAZUM_ID, TO_CHAR(DATUM_OD, 'DD.MM.YYYY') DATUM, FORMATIRANI_NAZIV, ADRESA, BROJ_DOK, KUPAC_ID, STRANKA_ID ");
     strSqlStatement.append(" FROM TAB_PREGLED_SPORAZUMI WHERE ");
     strSqlStatement.append(" DATUM_OD BETWEEN TO_DATE('");
     strSqlStatement.append(ui->dateOd->date().toString("dd.MM.yyyy").toStdString());
@@ -384,33 +389,77 @@ void FrmPregledN::popunaZahtjevaL1()
 
     if (m_iTipKanala == 1)
     {
-        strSqlStatement.append(" AND KANAL_ID = ");
-        strSqlStatement.append(cttl::itos(g_UNIO_KANAL_ID));
-        if (g_UNIO_ORGJED_ID > 0)
+
+        if(g_FILTER_REGIJA_ID != 0)
         {
-            strSqlStatement.append(" AND ORGJED_ID = ");
-            strSqlStatement.append(cttl::itos(g_UNIO_ORGJED_ID));
+            strSqlStatement.append(" AND REGIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
         }
-        if (g_UNIO_KORISNIK_ID != "0")
+        else
+        {
+            strSqlStatement.append(" AND REGIJA_ID IN (145839, 145840, 145841, 145842) ");
+        }
+        if(g_FILTER_ZUPANIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID !=0 ");
+        }
+        if(g_FILTER_KANAL_ID != 0)
+        {
+           strSqlStatement.append(" AND KANAL_ID = ");
+           strSqlStatement.append(cttl::itos(g_FILTER_KANAL_ID));
+        }
+        else
+        {
+           strSqlStatement.append(" AND KANAL_ID != 0 ");
+        }
+
+//        if (g_FILTER_ORGJED_ID > 0)
+//        {
+//            strSqlStatement.append(" AND ORGJED_ID = ");
+//            strSqlStatement.append(cttl::itos(g_FILTER_ORGJED_ID));
+//        }
+
+        if (g_FILTER_KORISNIK_ID != "0")
         {
             if(m_iTipKorisnika == 1)
             {
-                strSqlStatement.append(" AND OPERATER = ");
-                strSqlStatement.append(g_UNIO_KORISNIK_ID);
+                strSqlStatement.append(" AND OPERATER = '");
+                strSqlStatement.append(g_FILTER_KORISNIK_ID);
+                strSqlStatement.append("' ");
             }
             else
             {
-                strSqlStatement.append(" AND KORISNIK_ID = ");
-                strSqlStatement.append(g_UNIO_KORISNIK_ID);
+                strSqlStatement.append(" AND KORISNIK_ID = '");
+                strSqlStatement.append(g_FILTER_KORISNIK_ID);
+                strSqlStatement.append("' ");
             }
         }
     }
     else
     {
-        strSqlStatement.append(" AND REGIJA_ID = ");
-        strSqlStatement.append(cttl::itos(g_UNIO_REGIJA_ID));
-        strSqlStatement.append(" AND ZUPANIJA_ID = ");
-        strSqlStatement.append(cttl::itos(g_UNIO_ZUPANIJA_ID));
+        if(g_FILTER_REGIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND REGIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND REGIJA_ID IN (145839, 145840, 145841, 145842) ");
+        }
+        if(g_FILTER_ZUPANIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID !=0 ");
+        }
     }
 
     if (m_iFltLinijaProdukataId != 0)
@@ -418,6 +467,20 @@ void FrmPregledN::popunaZahtjevaL1()
         strSqlStatement.append(" AND KLASA ='");
         strSqlStatement.append(cttl::itos(m_iFltLinijaProdukataId));
         strSqlStatement.append("' ");
+    }
+
+    if(m_iTipDodatnogFiltra == 1)
+    {
+        strSqlStatement.append(" AND FORMATIRANI_NAZIV LIKE '");
+        strSqlStatement.append(ui->txtSearchParam->text().toStdString());
+        strSqlStatement.append("%' ");
+
+    }
+    else if(m_iTipDodatnogFiltra == 2)
+    {
+        strSqlStatement.append(" AND ADRESA LIKE '%");
+        strSqlStatement.append(ui->txtSearchParam->text().toStdString());
+        strSqlStatement.append("%' ");
     }
 
     strSqlStatement.append(" AND ROWNUM < ");
@@ -433,15 +496,21 @@ void FrmPregledN::popunaZahtjevaL1()
         while(rs->next())
         {
             QTreeWidgetItem *itemSporazum = new QTreeWidgetItem();
-            itemSporazum->setText(0, QString::fromStdString(rs->getString(4)));
+            itemSporazum->setText(0, QString::fromStdString(rs->getString(3)) +
+                                     tr(" ... ") +
+                                     QString::fromStdString(rs->getString(6)) +
+                                     tr(" ... ") +
+                                     QString::fromStdString(rs->getString(4)) +
+                                     tr(" ,  ") +
+                                     QString::fromStdString(rs->getString(5)));
             itemSporazum->setText(1, QString::number(rs->getInt(1)));
-            itemSporazum->setText(2, QString::number(rs->getInt(2)));
-            itemSporazum->setText(3, QString::number(rs->getInt(3)));
-            itemSporazum->setText(4, QString::number(rs->getInt(5)));
-            itemSporazum->setText(5, QString::fromStdString(rs->getString(6)));
-            itemSporazum->setText(6, QString::number(rs->getInt(7)));
-            itemSporazum->setText(7, QString::number(rs->getInt(8)));
-            itemSporazum->setText(8, QString::number(rs->getInt(9)));
+            itemSporazum->setText(2, QString::number(rs->getUInt(2)));
+            itemSporazum->setText(3, QString::fromStdString(rs->getString(3)));
+            itemSporazum->setText(4, QString::fromStdString(rs->getString(4)));
+            itemSporazum->setText(5, QString::fromStdString(rs->getString(5)));
+            itemSporazum->setText(6, QString::fromStdString(rs->getString(6)));
+            itemSporazum->setText(7, QString::number(rs->getUInt(7)));
+            itemSporazum->setText(8, QString::number(rs->getUInt(8)));
             listSporazumi.append(itemSporazum);
         }
 
@@ -457,6 +526,9 @@ void FrmPregledN::popunaZahtjevaL1()
     g_DonatConn->terminateStatement(sqlStatement);
     strSqlStatement.erase();
 
+    ui->btnSporazumiUkupno->setText(tr("UK ...") + QString::number(listSporazumi.count()));
+    ui->btnSporazumiRange->setText(tr("1 ...") + QString::number(listSporazumi.count()));
+
     if(!listSporazumi.empty())
     {
         listSporazumi.first()->setSelected(true);
@@ -466,19 +538,835 @@ void FrmPregledN::popunaZahtjevaL1()
 //        ui->treeSporazumi->expandItem(listSporazumi.first());
 //        ui->treeSporazumi->setCurrentItem(listSporazumi.first());
     }
-
 }
 void FrmPregledN::popunaZahtjevaL2()
 {
+    ui->treeSporazumi->clear();
+
+    QList<QTreeWidgetItem *> listSporazumi;
+
+    string strSqlStatement;
+
+    strSqlStatement.append("SELECT /*+ TAB_SP_IDX_1 */ ");
+    strSqlStatement.append(" ROWNUM, SPORAZUM_ID, TO_CHAR(DATUM_OD, 'DD.MM.YYYY') DATUM, FORMATIRANI_NAZIV, ADRESA, BROJ_DOK, KUPAC_ID, STRANKA_ID ");
+    strSqlStatement.append(" FROM TAB_PREGLED_SPORAZUMI WHERE ");
+    strSqlStatement.append(" DATUM_OD BETWEEN TO_DATE('");
+    strSqlStatement.append(ui->dateOd->date().toString("dd.MM.yyyy").toStdString());
+    strSqlStatement.append("', 'DD.MM.YYYY') ");
+    strSqlStatement.append(" AND TO_DATE('");
+    strSqlStatement.append(ui->dateDo->date().toString("dd.MM.yyyy").toStdString());
+    strSqlStatement.append("', 'DD.MM.YYYY') ");
+    strSqlStatement.append(" AND TSPORAZUMA_ID IN (1, 4, 7, 8, 11, 12) ");
+    strSqlStatement.append(" AND KLJUCNI_IND = ");
+    strSqlStatement.append(cttl::itos(m_iTipKupca));
+    strSqlStatement.append(" AND STATUS_ID != 0 ");
+
+    if (m_iTipKanala == 1)
+    {
+
+        if(g_FILTER_REGIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND REGIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND REGIJA_ID IN (145839, 145840, 145841, 145842) ");
+        }
+        if(g_FILTER_ZUPANIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID !=0 ");
+        }
+        if(g_FILTER_KANAL_ID != 0)
+        {
+           strSqlStatement.append(" AND KANAL_ID = ");
+           strSqlStatement.append(cttl::itos(g_FILTER_KANAL_ID));
+        }
+        else
+        {
+           strSqlStatement.append(" AND KANAL_ID != 0 ");
+        }
+
+//        if (g_FILTER_ORGJED_ID > 0)
+//        {
+//            strSqlStatement.append(" AND ORGJED_ID = ");
+//            strSqlStatement.append(cttl::itos(g_FILTER_ORGJED_ID));
+//        }
+
+        if (g_FILTER_KORISNIK_ID != "0")
+        {
+            if(m_iTipKorisnika == 1)
+            {
+                strSqlStatement.append(" AND OPERATER = '");
+                strSqlStatement.append(g_FILTER_KORISNIK_ID);
+                strSqlStatement.append("' ");
+            }
+            else
+            {
+                strSqlStatement.append(" AND KORISNIK_ID = '");
+                strSqlStatement.append(g_FILTER_KORISNIK_ID);
+                strSqlStatement.append("' ");
+            }
+        }
+    }
+    else
+    {
+        if(g_FILTER_REGIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND REGIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND REGIJA_ID IN (145839, 145840, 145841, 145842) ");
+        }
+        if(g_FILTER_ZUPANIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID !=0 ");
+        }
+    }
+
+    if (m_iFltLinijaProdukataId != 0)
+    {
+        strSqlStatement.append(" AND KLASA ='");
+        strSqlStatement.append(cttl::itos(m_iFltLinijaProdukataId));
+        strSqlStatement.append("' ");
+    }
+
+    strSqlStatement.append(" AND SPORAZUM_ID IN (");
+    strSqlStatement.append("SELECT /*+ index(PP_5) */ ID2 FROM POSLOVNI_PROCESI WHERE STANJE_ID IN (");
+    strSqlStatement.append(m_strListaValue);
+    strSqlStatement.append("))");
+
+    if(m_iTipDodatnogFiltra == 1)
+    {
+        strSqlStatement.append(" AND FORMATIRANI_NAZIV LIKE '");
+        strSqlStatement.append(ui->txtSearchParam->text().toStdString());
+        strSqlStatement.append("%' ");
+
+    }
+    else if(m_iTipDodatnogFiltra == 2)
+    {
+        strSqlStatement.append(" AND ADRESA LIKE '%");
+        strSqlStatement.append(ui->txtSearchParam->text().toStdString());
+        strSqlStatement.append("%' ");
+    }
+
+    strSqlStatement.append(" AND ROWNUM < ");
+    strSqlStatement.append(cttl::itos(m_iNoDef));
+
+    Statement *sqlStatement = g_DonatConn->createStatement();
+    sqlStatement->setSQL(strSqlStatement);
+
+    try
+    {
+        ResultSet *rs = sqlStatement->executeQuery();
+
+        while(rs->next())
+        {
+            QTreeWidgetItem *itemSporazum = new QTreeWidgetItem();
+            itemSporazum->setText(0, QString::fromStdString(rs->getString(3)) +
+                                     tr(" ... ") +
+                                     QString::fromStdString(rs->getString(6)) +
+                                     tr(" ... ") +
+                                     QString::fromStdString(rs->getString(4)) +
+                                     tr(" ,  ") +
+                                     QString::fromStdString(rs->getString(5)));
+            itemSporazum->setText(1, QString::number(rs->getInt(1)));
+            itemSporazum->setText(2, QString::number(rs->getUInt(2)));
+            itemSporazum->setText(3, QString::fromStdString(rs->getString(3)));
+            itemSporazum->setText(4, QString::fromStdString(rs->getString(4)));
+            itemSporazum->setText(5, QString::fromStdString(rs->getString(5)));
+            itemSporazum->setText(6, QString::fromStdString(rs->getString(6)));
+            itemSporazum->setText(7, QString::number(rs->getUInt(7)));
+            itemSporazum->setText(8, QString::number(rs->getUInt(8)));
+            listSporazumi.append(itemSporazum);
+        }
+
+        sqlStatement->closeResultSet(rs);
+    }
+    catch(SQLException &ex)
+    {
+        QMessageBox::critical(this, tr("DONAT - Database Error"),
+                                       QString::fromStdString(ex.getMessage()),
+                                       QMessageBox::Close);
+    }
+
+    g_DonatConn->terminateStatement(sqlStatement);
+    strSqlStatement.erase();
+
+    ui->btnSporazumiUkupno->setText(tr("UK ...") + QString::number(listSporazumi.count()));
+    ui->btnSporazumiRange->setText(tr("1 ...") + QString::number(listSporazumi.count()));
+
+    if(!listSporazumi.empty())
+    {
+        listSporazumi.first()->setSelected(true);
+        ui->treeSporazumi->insertTopLevelItems(0, listSporazumi);
+        ui->treeSporazumi->expandAll();
+//        ui->treeSporazumi->collapseAll();
+//        ui->treeSporazumi->expandItem(listSporazumi.first());
+//        ui->treeSporazumi->setCurrentItem(listSporazumi.first());
+    }
 }
 void FrmPregledN::popunaUgovoraL1()
 {
+    ui->treeSporazumi->clear();
+
+    QList<QTreeWidgetItem *> listSporazumi;
+
+    string strSqlStatement;
+
+    strSqlStatement.append("SELECT /*+ TAB_SP_IDX_1 */ ");
+    strSqlStatement.append(" ROWNUM, SPORAZUM_ID, TO_CHAR(DATUM_OD, 'DD.MM.YYYY') DATUM, FORMATIRANI_NAZIV, ADRESA, BROJ_DOK, KUPAC_ID, STRANKA_ID ");
+    strSqlStatement.append(" FROM TAB_PREGLED_SPORAZUMI WHERE ");
+    strSqlStatement.append(" DATUM_OD BETWEEN TO_DATE('");
+    strSqlStatement.append(ui->dateOd->date().toString("dd.MM.yyyy").toStdString());
+    strSqlStatement.append("', 'DD.MM.YYYY') ");
+    strSqlStatement.append(" AND TO_DATE('");
+    strSqlStatement.append(ui->dateDo->date().toString("dd.MM.yyyy").toStdString());
+    strSqlStatement.append("', 'DD.MM.YYYY') ");
+    strSqlStatement.append(" AND TSPORAZUMA_ID IN (3) ");
+    strSqlStatement.append(" AND KLJUCNI_IND = ");
+    strSqlStatement.append(cttl::itos(m_iTipKupca));
+
+    if (m_strListaValue == "0")
+    {
+        strSqlStatement.append(" AND STATUS_ID != 0 ");
+    }
+    else
+    {
+        strSqlStatement.append(" AND STATUS_ID IN (");
+        strSqlStatement.append(m_strListaValue);
+        strSqlStatement.append(")");
+    }
+
+    if (m_iTipKanala == 1)
+    {
+
+        if(g_FILTER_REGIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND REGIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND REGIJA_ID IN (145839, 145840, 145841, 145842) ");
+        }
+        if(g_FILTER_ZUPANIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID !=0 ");
+        }
+        if(g_FILTER_KANAL_ID != 0)
+        {
+           strSqlStatement.append(" AND KANAL_ID = ");
+           strSqlStatement.append(cttl::itos(g_FILTER_KANAL_ID));
+        }
+        else
+        {
+           strSqlStatement.append(" AND KANAL_ID != 0 ");
+        }
+
+//        if (g_FILTER_ORGJED_ID > 0)
+//        {
+//            strSqlStatement.append(" AND ORGJED_ID = ");
+//            strSqlStatement.append(cttl::itos(g_FILTER_ORGJED_ID));
+//        }
+
+        if (g_FILTER_KORISNIK_ID != "0")
+        {
+            if(m_iTipKorisnika == 1)
+            {
+                strSqlStatement.append(" AND OPERATER = '");
+                strSqlStatement.append(g_FILTER_KORISNIK_ID);
+                strSqlStatement.append("' ");
+            }
+            else
+            {
+                strSqlStatement.append(" AND KORISNIK_ID = '");
+                strSqlStatement.append(g_FILTER_KORISNIK_ID);
+                strSqlStatement.append("' ");
+            }
+        }
+    }
+    else
+    {
+        if(g_FILTER_REGIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND REGIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND REGIJA_ID IN (145839, 145840, 145841, 145842) ");
+        }
+        if(g_FILTER_ZUPANIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID !=0 ");
+        }
+    }
+
+    if (m_iFltLinijaProdukataId != 0)
+    {
+        strSqlStatement.append(" AND KLASA ='");
+        strSqlStatement.append(cttl::itos(m_iFltLinijaProdukataId));
+        strSqlStatement.append("' ");
+    }
+
+    if(m_iTipDodatnogFiltra == 1)
+    {
+        strSqlStatement.append(" AND FORMATIRANI_NAZIV LIKE '");
+        strSqlStatement.append(ui->txtSearchParam->text().toStdString());
+        strSqlStatement.append("%' ");
+
+    }
+    else if(m_iTipDodatnogFiltra == 2)
+    {
+        strSqlStatement.append(" AND ADRESA LIKE '%");
+        strSqlStatement.append(ui->txtSearchParam->text().toStdString());
+        strSqlStatement.append("%' ");
+    }
+
+    strSqlStatement.append(" AND ROWNUM < ");
+    strSqlStatement.append(cttl::itos(m_iNoDef));
+
+    Statement *sqlStatement = g_DonatConn->createStatement();
+    sqlStatement->setSQL(strSqlStatement);
+
+    try
+    {
+        ResultSet *rs = sqlStatement->executeQuery();
+
+        while(rs->next())
+        {
+            QTreeWidgetItem *itemSporazum = new QTreeWidgetItem();
+            itemSporazum->setText(0, QString::fromStdString(rs->getString(3)) +
+                                     tr(" ... ") +
+                                     QString::fromStdString(rs->getString(6)) +
+                                     tr(" ... ") +
+                                     QString::fromStdString(rs->getString(4)) +
+                                     tr(" ,  ") +
+                                     QString::fromStdString(rs->getString(5)));
+            itemSporazum->setText(1, QString::number(rs->getInt(1)));
+            itemSporazum->setText(2, QString::number(rs->getUInt(2)));
+            itemSporazum->setText(3, QString::fromStdString(rs->getString(3)));
+            itemSporazum->setText(4, QString::fromStdString(rs->getString(4)));
+            itemSporazum->setText(5, QString::fromStdString(rs->getString(5)));
+            itemSporazum->setText(6, QString::fromStdString(rs->getString(6)));
+            itemSporazum->setText(7, QString::number(rs->getUInt(7)));
+            itemSporazum->setText(8, QString::number(rs->getUInt(8)));
+            listSporazumi.append(itemSporazum);
+        }
+
+        sqlStatement->closeResultSet(rs);
+    }
+    catch(SQLException &ex)
+    {
+        QMessageBox::critical(this, tr("DONAT - Database Error"),
+                                       QString::fromStdString(ex.getMessage()),
+                                       QMessageBox::Close);
+    }
+
+    g_DonatConn->terminateStatement(sqlStatement);
+    strSqlStatement.erase();
+
+    ui->btnSporazumiUkupno->setText(tr("UK ...") + QString::number(listSporazumi.count()));
+    ui->btnSporazumiRange->setText(tr("1 ...") + QString::number(listSporazumi.count()));
+
+    if(!listSporazumi.empty())
+    {
+        listSporazumi.first()->setSelected(true);
+        ui->treeSporazumi->insertTopLevelItems(0, listSporazumi);
+        ui->treeSporazumi->expandAll();
+//        ui->treeSporazumi->collapseAll();
+//        ui->treeSporazumi->expandItem(listSporazumi.first());
+//        ui->treeSporazumi->setCurrentItem(listSporazumi.first());
+    }
 }
 void FrmPregledN::popunaUgovoraL2()
 {
+    ui->treeSporazumi->clear();
+
+    QList<QTreeWidgetItem *> listSporazumi;
+
+    string strSqlStatement;
+
+    strSqlStatement.append("SELECT /*+ TAB_SP_IDX_1 */ ");
+    strSqlStatement.append(" ROWNUM, SPORAZUM_ID, TO_CHAR(DATUM_OD, 'DD.MM.YYYY') DATUM, FORMATIRANI_NAZIV, ADRESA, BROJ_DOK, KUPAC_ID, STRANKA_ID ");
+    strSqlStatement.append(" FROM TAB_PREGLED_SPORAZUMI WHERE ");
+    strSqlStatement.append(" DATUM_OD BETWEEN TO_DATE('");
+    strSqlStatement.append(ui->dateOd->date().toString("dd.MM.yyyy").toStdString());
+    strSqlStatement.append("', 'DD.MM.YYYY') ");
+    strSqlStatement.append(" AND TO_DATE('");
+    strSqlStatement.append(ui->dateDo->date().toString("dd.MM.yyyy").toStdString());
+    strSqlStatement.append("', 'DD.MM.YYYY') ");
+    strSqlStatement.append(" AND TSPORAZUMA_ID IN (3) ");
+    strSqlStatement.append(" AND KLJUCNI_IND = ");
+    strSqlStatement.append(cttl::itos(m_iTipKupca));
+    strSqlStatement.append(" AND STATUS_ID != 0 ");
+
+    if (m_iTipKanala == 1)
+    {
+
+        if(g_FILTER_REGIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND REGIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND REGIJA_ID IN (145839, 145840, 145841, 145842) ");
+        }
+        if(g_FILTER_ZUPANIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID !=0 ");
+        }
+        if(g_FILTER_KANAL_ID != 0)
+        {
+           strSqlStatement.append(" AND KANAL_ID = ");
+           strSqlStatement.append(cttl::itos(g_FILTER_KANAL_ID));
+        }
+        else
+        {
+           strSqlStatement.append(" AND KANAL_ID != 0 ");
+        }
+
+//        if (g_FILTER_ORGJED_ID > 0)
+//        {
+//            strSqlStatement.append(" AND ORGJED_ID = ");
+//            strSqlStatement.append(cttl::itos(g_FILTER_ORGJED_ID));
+//        }
+
+        if (g_FILTER_KORISNIK_ID != "0")
+        {
+            if(m_iTipKorisnika == 1)
+            {
+                strSqlStatement.append(" AND OPERATER = '");
+                strSqlStatement.append(g_FILTER_KORISNIK_ID);
+                strSqlStatement.append("' ");
+            }
+            else
+            {
+                strSqlStatement.append(" AND KORISNIK_ID = '");
+                strSqlStatement.append(g_FILTER_KORISNIK_ID);
+                strSqlStatement.append("' ");
+            }
+        }
+    }
+    else
+    {
+        if(g_FILTER_REGIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND REGIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND REGIJA_ID IN (145839, 145840, 145841, 145842) ");
+        }
+        if(g_FILTER_ZUPANIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID !=0 ");
+        }
+    }
+
+    if (m_iFltLinijaProdukataId != 0)
+    {
+        strSqlStatement.append(" AND KLASA ='");
+        strSqlStatement.append(cttl::itos(m_iFltLinijaProdukataId));
+        strSqlStatement.append("' ");
+    }
+
+    strSqlStatement.append(" AND SPORAZUM_ID IN (");
+    strSqlStatement.append("SELECT /*+ index(PP_5) */ ID2 FROM POSLOVNI_PROCESI WHERE STANJE_ID IN (");
+    strSqlStatement.append(m_strListaValue);
+    strSqlStatement.append("))");
+
+    if(m_iTipDodatnogFiltra == 1)
+    {
+        strSqlStatement.append(" AND FORMATIRANI_NAZIV LIKE '");
+        strSqlStatement.append(ui->txtSearchParam->text().toStdString());
+        strSqlStatement.append("%' ");
+
+    }
+    else if(m_iTipDodatnogFiltra == 2)
+    {
+        strSqlStatement.append(" AND ADRESA LIKE '%");
+        strSqlStatement.append(ui->txtSearchParam->text().toStdString());
+        strSqlStatement.append("%' ");
+    }
+
+    strSqlStatement.append(" AND ROWNUM < ");
+    strSqlStatement.append(cttl::itos(m_iNoDef));
+
+    Statement *sqlStatement = g_DonatConn->createStatement();
+    sqlStatement->setSQL(strSqlStatement);
+
+    try
+    {
+        ResultSet *rs = sqlStatement->executeQuery();
+
+        while(rs->next())
+        {
+            QTreeWidgetItem *itemSporazum = new QTreeWidgetItem();
+            itemSporazum->setText(0, QString::fromStdString(rs->getString(3)) +
+                                     tr(" ... ") +
+                                     QString::fromStdString(rs->getString(6)) +
+                                     tr(" ... ") +
+                                     QString::fromStdString(rs->getString(4)) +
+                                     tr(" ,  ") +
+                                     QString::fromStdString(rs->getString(5)));
+            itemSporazum->setText(1, QString::number(rs->getInt(1)));
+            itemSporazum->setText(2, QString::number(rs->getUInt(2)));
+            itemSporazum->setText(3, QString::fromStdString(rs->getString(3)));
+            itemSporazum->setText(4, QString::fromStdString(rs->getString(4)));
+            itemSporazum->setText(5, QString::fromStdString(rs->getString(5)));
+            itemSporazum->setText(6, QString::fromStdString(rs->getString(6)));
+            itemSporazum->setText(7, QString::number(rs->getUInt(7)));
+            itemSporazum->setText(8, QString::number(rs->getUInt(8)));
+            listSporazumi.append(itemSporazum);
+        }
+
+        sqlStatement->closeResultSet(rs);
+    }
+    catch(SQLException &ex)
+    {
+        QMessageBox::critical(this, tr("DONAT - Database Error"),
+                                       QString::fromStdString(ex.getMessage()),
+                                       QMessageBox::Close);
+    }
+
+    g_DonatConn->terminateStatement(sqlStatement);
+    strSqlStatement.erase();
+
+    ui->btnSporazumiUkupno->setText(tr("UK ...") + QString::number(listSporazumi.count()));
+    ui->btnSporazumiRange->setText(tr("1 ...") + QString::number(listSporazumi.count()));
+
+    if(!listSporazumi.empty())
+    {
+        listSporazumi.first()->setSelected(true);
+        ui->treeSporazumi->insertTopLevelItems(0, listSporazumi);
+        ui->treeSporazumi->expandAll();
+//        ui->treeSporazumi->collapseAll();
+//        ui->treeSporazumi->expandItem(listSporazumi.first());
+//        ui->treeSporazumi->setCurrentItem(listSporazumi.first());
+    }
 }
 void FrmPregledN::popunaObavijestL1()
 {
+    ui->treeSporazumi->clear();
+
+    QList<QTreeWidgetItem *> listSporazumi;
+
+    string strSqlStatement;
+
+    strSqlStatement.append("SELECT /*+ RULE */ ");
+    strSqlStatement.append(" ROWNUM, SPORAZUM_ID, TO_CHAR(DATUM_OD, 'DD.MM.YYYY') DATUM, FORMATIRANI_NAZIV, ADRESA, BROJ_DOK, KUPAC_ID, STRANKA_ID ");
+    strSqlStatement.append(" FROM TAB_SLANJE_OBAVIJESTI WHERE ");
+    strSqlStatement.append(" DATUM_STANJA BETWEEN TO_DATE('");
+    strSqlStatement.append(ui->dateOd->date().toString("dd.MM.yyyy").toStdString());
+    strSqlStatement.append("', 'DD.MM.YYYY') ");
+    strSqlStatement.append(" AND TO_DATE('");
+    strSqlStatement.append(ui->dateDo->date().toString("dd.MM.yyyy").toStdString());
+    strSqlStatement.append("', 'DD.MM.YYYY') ");
+    strSqlStatement.append(" AND VSPORAZUMA_ID != 0 ");
+    strSqlStatement.append(" AND KLJUCNI_IND = ");
+    strSqlStatement.append(cttl::itos(m_iTipKupca));
+
+    if (m_strListaValue == "0")
+    {
+        strSqlStatement.append(" AND STANJE_ID != 0 ");
+    }
+    else
+    {
+        strSqlStatement.append(" AND STANJE_ID IN (");
+        strSqlStatement.append(m_strListaValue);
+        strSqlStatement.append(")");
+    }
+
+    switch (m_iListaSel) {
+        case 15:
+            {
+                strSqlStatement.append(" AND NVL(KTKU_RN, 4) > -1 AND NVL(KTKU_RN, 4) NOT IN (1, 3) ");
+                strSqlStatement.append(" AND TRAJNO_IND = 'N' ");
+                break;
+            }
+        case 16:
+            {
+                strSqlStatement.append("  AND TSPORAZUMA_ID IN (1, 4) ");
+                break;
+            }
+        case 17:
+            {
+                strSqlStatement.append(" AND TSPORAZUMA_ID IN (3, 3) ");
+                break;
+            }
+        case 18:
+            {
+                strSqlStatement.append(" AND KTKU_RN IN (5, 6) AND TRAJNO_IND= 'Y' ");
+                break;
+            }
+        case 20:
+            {
+                strSqlStatement.append(" AND NVL(KTKU_RN, 4) > -1 AND NVL(KTKU_RN, 4) IN (1, 3) ");
+                strSqlStatement.append(" AND TRAJNO_IND = 'N' ");
+                break;
+            }
+        case 41:
+            {
+                strSqlStatement.append(" AND KTKU_RN = 25 ");
+                break;
+            }
+        default:
+            break;
+    }
+
+    if (m_iTipKanala == 1)
+    {
+
+        if(g_FILTER_REGIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND REGIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND REGIJA_ID IN (145839, 145840, 145841, 145842) ");
+        }
+        if(g_FILTER_ZUPANIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID !=0 ");
+        }
+        if(g_FILTER_KANAL_ID != 0)
+        {
+           strSqlStatement.append(" AND KANAL_ID = ");
+           strSqlStatement.append(cttl::itos(g_FILTER_KANAL_ID));
+        }
+        else
+        {
+           strSqlStatement.append(" AND KANAL_ID != 0 ");
+        }
+
+//        if (g_FILTER_ORGJED_ID > 0)
+//        {
+//            strSqlStatement.append(" AND ORGJED_ID = ");
+//            strSqlStatement.append(cttl::itos(g_FILTER_ORGJED_ID));
+//        }
+
+        if (g_FILTER_KORISNIK_ID != "0")
+        {
+            if(m_iTipKorisnika == 1)
+            {
+                strSqlStatement.append(" AND OPERATER = '");
+                strSqlStatement.append(g_FILTER_KORISNIK_ID);
+                strSqlStatement.append("' ");
+            }
+            else
+            {
+                strSqlStatement.append(" AND KORISNIK_ID = '");
+                strSqlStatement.append(g_FILTER_KORISNIK_ID);
+                strSqlStatement.append("' ");
+            }
+        }
+    }
+    else
+    {
+        if(g_FILTER_REGIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND REGIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND REGIJA_ID IN (145839, 145840, 145841, 145842) ");
+        }
+        if(g_FILTER_ZUPANIJA_ID != 0)
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID = ");
+            strSqlStatement.append(cttl::itos(g_FILTER_REGIJA_ID));
+        }
+        else
+        {
+            strSqlStatement.append(" AND ZUPANIJA_ID !=0 ");
+        }
+    }
+
+    if (m_iFltLinijaProdukataId != 0)
+    {
+        strSqlStatement.append(" AND KLASA ='");
+        strSqlStatement.append(cttl::itos(m_iFltLinijaProdukataId));
+        strSqlStatement.append("' ");
+    }
+
+    if(m_iTipDodatnogFiltra == 1)
+    {
+        strSqlStatement.append(" AND FORMATIRANI_NAZIV LIKE '");
+        strSqlStatement.append(ui->txtSearchParam->text().toStdString());
+        strSqlStatement.append("%' ");
+
+    }
+    else if(m_iTipDodatnogFiltra == 2)
+    {
+        strSqlStatement.append(" AND ADRESA LIKE '%");
+        strSqlStatement.append(ui->txtSearchParam->text().toStdString());
+        strSqlStatement.append("%' ");
+    }
+
+    strSqlStatement.append(" AND ROWNUM < ");
+    strSqlStatement.append(cttl::itos(m_iNoDef));
+
+    Statement *sqlStatement = g_DonatConn->createStatement();
+    sqlStatement->setSQL(strSqlStatement);
+
+    try
+    {
+        ResultSet *rs = sqlStatement->executeQuery();
+
+        while(rs->next())
+        {
+            QTreeWidgetItem *itemSporazum = new QTreeWidgetItem();
+            itemSporazum->setText(0, QString::fromStdString(rs->getString(3)) +
+                                     tr(" ... ") +
+                                     QString::fromStdString(rs->getString(6)) +
+                                     tr(" ... ") +
+                                     QString::fromStdString(rs->getString(4)) +
+                                     tr(" ,  ") +
+                                     QString::fromStdString(rs->getString(5)));
+            itemSporazum->setText(1, QString::number(rs->getInt(1)));
+            itemSporazum->setText(2, QString::number(rs->getUInt(2)));
+            itemSporazum->setText(3, QString::fromStdString(rs->getString(3)));
+            itemSporazum->setText(4, QString::fromStdString(rs->getString(4)));
+            itemSporazum->setText(5, QString::fromStdString(rs->getString(5)));
+            itemSporazum->setText(6, QString::fromStdString(rs->getString(6)));
+            itemSporazum->setText(7, QString::number(rs->getUInt(7)));
+            itemSporazum->setText(8, QString::number(rs->getUInt(8)));
+            listSporazumi.append(itemSporazum);
+        }
+
+        sqlStatement->closeResultSet(rs);
+    }
+    catch(SQLException &ex)
+    {
+        QMessageBox::critical(this, tr("DONAT - Database Error"),
+                                       QString::fromStdString(ex.getMessage()),
+                                       QMessageBox::Close);
+    }
+
+    g_DonatConn->terminateStatement(sqlStatement);
+    strSqlStatement.erase();
+
+    ui->btnSporazumiUkupno->setText(tr("UK ...") + QString::number(listSporazumi.count()));
+    ui->btnSporazumiRange->setText(tr("1 ...") + QString::number(listSporazumi.count()));
+
+    if(!listSporazumi.empty())
+    {
+        listSporazumi.first()->setSelected(true);
+        ui->treeSporazumi->insertTopLevelItems(0, listSporazumi);
+        ui->treeSporazumi->expandAll();
+//        ui->treeSporazumi->collapseAll();
+//        ui->treeSporazumi->expandItem(listSporazumi.first());
+//        ui->treeSporazumi->setCurrentItem(listSporazumi.first());
+    }
+}
+void FrmPregledN::popunaPregledaZahtjevaNew()
+{
+    if(ui->txtSearchParam->text().isEmpty() == true)
+    {
+        return;
+    }
+
+    if(m_iTipDodatnogFiltra < 3)
+    {
+        return;
+    }
+
+    string strSqlStatement;
+    strSqlStatement.append("BEGIN PUNI_PREGLED_ZAHTJEVA_NEW(:SPORAZUM_ID_PAR, :KUPAC_ID_PAR, :BROJ_DOK_PAR, :GIMOVINE_ID_PAR, :TEL_BROJ_PAR, :TICKET_ID_PAR, :DATUM_OD_PAR, :DATUM_DO_PAR, :LISTA_IND_PAR); END;");
+    Statement *sqlStatement = g_DonatConn->createStatement();
+    sqlStatement->setSQL(strSqlStatement);
+    sqlStatement->setAutoCommit(TRUE);
+
+    try
+    {
+        switch (m_iTipDodatnogFiltra) {
+        case 3:
+            {
+                sqlStatement->setNull(1, OCCINUMBER);
+                sqlStatement->setNull(2, OCCINUMBER);
+                sqlStatement->setString(3, ui->txtSearchParam->text().toStdString());
+                sqlStatement->setNull(4, OCCISTRING);
+                sqlStatement->setNull(5, OCCISTRING);
+
+                break;
+            }
+        case 4:
+            {
+                break;
+            }
+        case 5:
+            {
+                break;
+            }
+        case 6:
+            {
+                break;
+            }
+        case 7:
+            {
+                break;
+            }
+        case 8:
+            {
+                break;
+            }
+        default:
+            break;
+        }
+        sqlStatement->executeUpdate();
+        int iBrojac = sqlStatement->getInt(7);
+    }
+    catch(SQLException &ex)
+    {
+        QMessageBox::critical(this, tr("DONAT - Database Error"),
+                                       QString::fromStdString(ex.getMessage()),
+                                       QMessageBox::Close);
+    }
+
+
 }
 
 // [Event Handlers]
@@ -489,7 +1377,7 @@ void FrmPregledN::on_btnPregledAktivnosti_clicked()
 
 void FrmPregledN::on_btnZahtjevUnio_clicked()
 {
-    if(g_UNIO_KORISNIK_ID == "0")
+    if(g_FILTER_KORISNIK_ID == "0")
     {
         m_iTipKorisnika = 0;
         ui->btnZahtjevUnio->setChecked(false);
@@ -507,7 +1395,7 @@ void FrmPregledN::on_btnZahtjevUnio_clicked()
 
 void FrmPregledN::on_btnZahtjevProdao_clicked()
 {
-    if(g_UNIO_KORISNIK_ID == "0")
+    if(g_FILTER_KORISNIK_ID == "0")
     {
         m_iTipKorisnika = 0;
         ui->btnZahtjevUnio->setChecked(false);
@@ -550,7 +1438,7 @@ void FrmPregledN::on_btnPromjenaKanalaProdaje_clicked()
 //    frmKanalProdajeKorisnik->exec();
 //    delete frmKanalProdajeKorisnik;
 
-//    ui->btnKorisnikKanal->setText(QString::fromStdString(g_UNIO_KANAL_NAZ) + tr(" ... ") + QString::fromStdString(g_UNIO_ORGJED_NAZ) + tr(" ... ") + QString::fromStdString(g_UNIO_KORISNIK_NAZ));
+//    ui->btnKorisnikKanal->setText(QString::fromStdString(g_FILTER_KANAL_NAZ) + tr(" ... ") + QString::fromStdString(g_FILTER_ORGJED_NAZ) + tr(" ... ") + QString::fromStdString(g_FILTER_KORISNIK_NAZ));
 }
 
 void FrmPregledN::on_btnKanalProdaje_clicked()
@@ -576,7 +1464,7 @@ void FrmPregledN::on_btnDonatUser_clicked()
     frmKanalProdajeKorisnik->exec();
     delete frmKanalProdajeKorisnik;
 
-//    ui->btnKorisnikKanal->setText(QString::fromStdString(g_UNIO_KANAL_NAZ) + tr(" ... ") + QString::fromStdString(g_UNIO_ORGJED_NAZ) + tr(" ... ") + QString::fromStdString(g_UNIO_KORISNIK_NAZ));
+//    ui->btnKorisnikKanal->setText(QString::fromStdString(g_FILTER_KANAL_NAZ) + tr(" ... ") + QString::fromStdString(g_FILTER_ORGJED_NAZ) + tr(" ... ") + QString::fromStdString(g_FILTER_KORISNIK_NAZ));
 
     setKorisnik();
 }
@@ -607,25 +1495,29 @@ void FrmPregledN::on_btnSme_clicked()
 
 void FrmPregledN::on_btnPretragaPrivatni_clicked()
 {
-    m_iTipKupca = 1;
+    m_iTipKupca = 0;
+    m_iTipDodatnogFiltra = 0;
     pokreniPretrazivanje();
 }
 
 void FrmPregledN::on_btnPretragaKljucni_clicked()
 {
-    m_iTipKupca = 2;
+    m_iTipKupca = 1;
+    m_iTipDodatnogFiltra = 0;
     pokreniPretrazivanje();
 }
 
 void FrmPregledN::on_btnPretragatSme_clicked()
 {
-    m_iTipKupca = 3;
+    m_iTipKupca = 2;
+    m_iTipDodatnogFiltra = 0;
     pokreniPretrazivanje();
 }
 
 void FrmPregledN::on_btnPretragaVeleprodaja_clicked()
 {
-    m_iTipKupca = 4;
+    m_iTipKupca = 3;
+    m_iTipDodatnogFiltra = 0;
     pokreniPretrazivanje();
 }
 
@@ -640,9 +1532,10 @@ void FrmPregledN::on_treeListeGrupa_itemPressed(QTreeWidgetItem *item, int UNUSE
     else
     {
         m_iListaTipId = item->text(4).toInt();
-        m_strListaValue = item->text(0).toStdString();
+        m_strListaValue = item->text(5).toStdString();
         m_iListaSub = item->text(7).toInt();
         m_iListaSel = item->text(8).toInt();
+        m_iTipDodatnogFiltra = 0;
         pokreniPretrazivanje();
     }
 }
@@ -657,8 +1550,82 @@ void FrmPregledN::on_cboPretragaKlase_currentIndexChanged(int index)
     m_iFltLinijaProdukataId = ui->cboPretragaKlase->itemData(index).toInt();
 }
 
+void FrmPregledN::on_btnFilterFormatiraniNaziv_clicked()
+{
+    ui->lblFilterTtile->setText(tr("FILTER - NAZIV"));
+    ui->txtSearchParam->setFocus();
+    m_iTipDodatnogFiltra = 1;
+}
+
+void FrmPregledN::on_btnFilterAdresa_clicked()
+{
+    ui->lblFilterTtile->setText(tr("FILTER - ADRESA"));
+    ui->txtSearchParam->setFocus();
+    m_iTipDodatnogFiltra = 2;
+}
+
+void FrmPregledN::on_btnFiletrBrojDokumenta_clicked()
+{
+    ui->lblFilterTtile->setText(tr("FILTER - BROJ DOK"));
+    ui->txtSearchParam->setFocus();
+    m_iTipDodatnogFiltra = 3;
+}
+
+void FrmPregledN::on_btnFilterBrojTelefona_clicked()
+{
+    ui->lblFilterTtile->setText(tr("FILTER - TELEFON"));
+    ui->txtSearchParam->setFocus();
+    m_iTipDodatnogFiltra = 4;
+}
+
+void FrmPregledN::on_btnFilterAsset_clicked()
+{
+    ui->lblFilterTtile->setText(tr("FILTER - ASSET"));
+    ui->txtSearchParam->setFocus();
+    m_iTipDodatnogFiltra = 5;
+
+}
+
+void FrmPregledN::on_btnFilterBrojSporazuma_clicked()
+{
+    ui->lblFilterTtile->setText(tr("FILTER - SPORAZUM"));
+    ui->txtSearchParam->setFocus();
+    m_iTipDodatnogFiltra = 6;
+
+}
+
+void FrmPregledN::on_btnFilterTicket_clicked()
+{
+    ui->lblFilterTtile->setText(tr("FILTER - TICKET"));
+    ui->txtSearchParam->setFocus();
+    m_iTipDodatnogFiltra = 7;
+
+}
+
+void FrmPregledN::on_btnFilterKupacId_clicked()
+{
+    ui->lblFilterTtile->setText(tr("FILTER - KUPAC"));
+    ui->txtSearchParam->setFocus();
+    m_iTipDodatnogFiltra = 8;
+
+}
+
+void FrmPregledN::on_btnTrazi_clicked()
+{
+    if(m_iTipDodatnogFiltra == 1 || m_iTipDodatnogFiltra == 2)
+    {
+        pokreniPretrazivanje();
+    }
+    else if(m_iTipDodatnogFiltra > 2)
+    {
+        popunaPregledaZahtjevaNew();
+    }
+}
+
 
 } // namespace sporazumi
+
+
 
 
 

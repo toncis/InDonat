@@ -602,9 +602,21 @@ void FrmKanalProdaje::popuniSveKorisnike()
 // [ Event Handlers ]
 void FrmKanalProdaje::on_btnPotvrda_clicked()
 {
-    if(m_strKorisdikId.length() == 0 && m_KanalProdajeMode == KanalProdajeKorisnik)
+    if(m_strKorisdikId.length() == 0 && (m_KanalProdajeMode == KanalProdajeKorisnik || m_KanalProdajeMode == KanalProdajeFilter))
     {
-        QMessageBox::information(this, tr("DONAT - Kanal Prodaje"), tr("Popunite sve podatke za korisnika."), QMessageBox::Close);
+        QMessageBox::information(this, tr("DONAT - Kanal Prodaje"), tr("Popunite sve podatke za Korisnika."), QMessageBox::Close);
+        return;
+    }
+
+    if(m_iRegijaId == 0 && m_KanalProdajeMode == KanalProdajeRegija)
+    {
+        QMessageBox::information(this, tr("DONAT - Kanal Prodaje"), tr("Popunite sve podatke za odabir Regije."), QMessageBox::Close);
+        return;
+    }
+
+    if(m_iKanalId == 0 && m_KanalProdajeMode == KanalProdajeProdajniKanal)
+    {
+        QMessageBox::information(this, tr("DONAT - Kanal Prodaje"), tr("Popunite sve podatke za odabir Prodajnog Kanala."), QMessageBox::Close);
         return;
     }
 
@@ -673,6 +685,38 @@ void FrmKanalProdaje::on_btnPotvrda_clicked()
         g_FILTER_ORGJED_NAZ = ui->txtOrganizacijskaJedinica->text().toStdString();
         g_FILTER_KORISNIK_ID = m_strKorisdikId;
         g_FILTER_KORISNIK_NAZ = ui->txtKorisnik->text().toStdString();
+
+        this->close();
+    }
+    else if (m_KanalProdajeMode == KanalProdajeRegija)
+    {
+        g_FILTER_REGIJA_ID = m_iRegijaId;
+        g_FILTER_REGIJA_NAZ = ui->txtRegija->text().toStdString();
+        g_FILTER_ZUPANIJA_ID = m_iZupanijaId;
+        g_FILTER_ZUPANIJA_NAZ = ui->txtZupanija->text().toStdString();
+        g_FILTER_KANAL_ID = 0;
+        g_FILTER_KANAL_NAZ = "";
+        g_FILTER_ORGJED_ID = 0;
+        g_FILTER_ORGJED_NAZ = "";
+        g_FILTER_KORISNIK_ID = "0";
+        g_FILTER_KORISNIK_NAZ = "";
+
+        this->close();
+    }
+    else if (m_KanalProdajeMode == KanalProdajeProdajniKanal)
+    {
+        g_FILTER_REGIJA_ID = 0;
+        g_FILTER_REGIJA_NAZ = "";
+        g_FILTER_ZUPANIJA_ID = 0;
+        g_FILTER_ZUPANIJA_NAZ = "";
+        g_FILTER_KANAL_ID = m_iKanalId;
+        g_FILTER_KANAL_NAZ = ui->txtKanalProdaje->text().toStdString();
+        g_FILTER_ORGJED_ID = m_iOrganizacijskaJedinicaId;
+        g_FILTER_ORGJED_NAZ = ui->txtOrganizacijskaJedinica->text().toStdString();
+        g_FILTER_KORISNIK_ID = "0";
+        g_FILTER_KORISNIK_NAZ = "";
+
+        this->close();
     }
 }
 

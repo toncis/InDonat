@@ -75,6 +75,24 @@ private slots:
 
     void on_treeListeGrupa_itemPressed(QTreeWidgetItem *item, int column);
 
+    void on_btnFilterFormatiraniNaziv_clicked();
+
+    void on_btnFilterAdresa_clicked();
+
+    void on_btnTrazi_clicked();
+
+    void on_btnFiletrBrojDokumenta_clicked();
+
+    void on_btnFilterBrojTelefona_clicked();
+
+    void on_btnFilterAsset_clicked();
+
+    void on_btnFilterBrojSporazuma_clicked();
+
+    void on_btnFilterTicket_clicked();
+
+    void on_btnFilterKupacId_clicked();
+
 private:
     Ui::FrmPregledN *ui;
 
@@ -89,6 +107,7 @@ private:
     int m_iTipKanala;
     int m_iTipKupca;
     int m_iTipFiltra;
+    int m_iTipDodatnogFiltra;
     int m_iFltLinijaProdukataId;
 
     int m_iListaTipId;
@@ -108,6 +127,7 @@ private:
     void popunaUgovoraL1();
     void popunaUgovoraL2();
     void popunaObavijestL1();
+    void popunaPregledaZahtjevaNew();
 
     void addNewGrupaToListGrupe(QList<QTreeWidgetItem *> listListaGrupa, QTreeWidgetItem *itemGrupa);
 

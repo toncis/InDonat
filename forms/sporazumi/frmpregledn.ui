@@ -1278,7 +1278,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="btnFilterNaziv">
+                   <widget class="QPushButton" name="btnFilterFormatiraniNaziv">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -1310,10 +1310,10 @@
                      <string>Filter naziv.</string>
                     </property>
                     <property name="statusTip">
-                     <string>Filter naziv.</string>
+                     <string>Filter formatirani naziv.</string>
                     </property>
                     <property name="whatsThis">
-                     <string>Filter naziv.</string>
+                     <string>Filter formatirani naziv.</string>
                     </property>
                     <property name="text">
                      <string/>
@@ -1885,6 +1885,9 @@
                       <pointsize>9</pointsize>
                      </font>
                     </property>
+                    <property name="alternatingRowColors">
+                     <bool>true</bool>
+                    </property>
                     <property name="headerHidden">
                      <bool>true</bool>
                     </property>
@@ -1962,7 +1965,7 @@
                    <number>1</number>
                   </property>
                   <item>
-                   <widget class="QPushButton" name="btnPretragaPrivatni_2">
+                   <widget class="QPushButton" name="btnSporazumiNoDef">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                       <horstretch>0</horstretch>
@@ -1993,7 +1996,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="btnIdentification_5">
+                   <widget class="QPushButton" name="btnSporazumiUkupno">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                       <horstretch>0</horstretch>
@@ -2027,7 +2030,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="btnFilterNaziv_2">
+                   <widget class="QPushButton" name="btnSporazumiPrev">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -2071,7 +2074,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="btnIdentification_7">
+                   <widget class="QPushButton" name="btnSporazumiRange">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                       <horstretch>0</horstretch>
@@ -2105,7 +2108,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="btnFilterNaziv_3">
+                   <widget class="QPushButton" name="btnSporazumiNext">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -2149,7 +2152,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="btnIdentification_6">
+                   <widget class="QPushButton" name="btnSporazumiTitle_6">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                       <horstretch>0</horstretch>
