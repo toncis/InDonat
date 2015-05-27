@@ -72,6 +72,48 @@ void FrmPregledN::initForm()
     ui->treeSporazumi->hideColumn(5);
     ui->treeSporazumi->hideColumn(6);
 
+    ui->treeSporazumLista->setColumnWidth(0, 230);
+    ui->treeSporazumLista->setColumnWidth(1, 18);
+    ui->treeSporazumLista->setColumnWidth(2, 18);
+    ui->treeSporazumLista->hideColumn(3);
+    ui->treeSporazumLista->hideColumn(4);
+    ui->treeSporazumLista->hideColumn(5);
+    ui->treeSporazumLista->hideColumn(6);
+    ui->treeSporazumLista->hideColumn(7);
+    ui->treeSporazumLista->hideColumn(8);
+    ui->treeSporazumLista->hideColumn(9);
+    ui->treeSporazumLista->hideColumn(10);
+
+    m_iconZuti.addFile(QString::fromUtf8(":/InDonat/Forms/images/zuti.JPG"),
+                 QSize(),
+                 QIcon::Normal,
+                 QIcon::Off);
+    m_iconZeleni.addFile(QString::fromUtf8(":/InDonat/Forms/images/zeleni.JPG"),
+                 QSize(),
+                 QIcon::Normal,
+                 QIcon::Off);
+    m_iconCrveni.addFile(QString::fromUtf8(":/InDonat/Forms/images/crveni.JPG"),
+                 QSize(),
+                 QIcon::Normal,
+                 QIcon::Off);
+    m_iconUkljucenje.addFile(QString::fromUtf8(":/InDonat/Forms/images/UG_TEL.GIF"),
+                 QSize(),
+                 QIcon::Normal,
+                 QIcon::Off);
+    m_iconPromjena.addFile(QString::fromUtf8(":/InDonat/Forms/images/POP_TEL.GIF"),
+                 QSize(),
+                 QIcon::Normal,
+                 QIcon::Off);
+    m_iconIskljucenje.addFile(QString::fromUtf8(":/InDonat/Forms/images/ISK_U.GIF"),
+                 QSize(),
+                 QIcon::Normal,
+                 QIcon::Off);
+
+    m_iconTransparent.addFile(QString::fromUtf8(":/InDonat/Forms/images/transparet_10x10.png"),
+                 QSize(),
+                 QIcon::Normal,
+                 QIcon::Off);
+
     m_iNoDef = 1001;
 
     m_iSporazumId = 0;
@@ -105,11 +147,11 @@ void FrmPregledN::initForm()
 }
 void FrmPregledN::initSporazum()
 {
-    m_iSporazumId = 0;
-    m_iStrankaId = 0;
-    m_iKupacId = 0;
+//    m_iSporazumId = 0;
+//    m_iStrankaId = 0;
+//    m_iKupacId = 0;
 
-    ui->treeSporazumStavke->clear();
+    ui->treeSporazumLista->clear();
     ui->treeAktivnosti->clear();
     ui->treeStavke->clear();
 
@@ -1314,6 +1356,28 @@ void FrmPregledN::popunaPregledaZahtjevaNew()
         return;
     }
 
+    Date datumOd = Date(g_DonatEnv,
+                          ui->dateOd->date().year(),
+                          ui->dateOd->date().month(),
+                          ui->dateOd->date().day(),
+                          ui->dateOd->time().hour(),
+                          ui->dateOd->time().minute(),
+                          ui->dateOd->time().second());
+
+    Date datumDo = Date(g_DonatEnv,
+                          ui->dateDo->date().year(),
+                          ui->dateDo->date().month(),
+                          ui->dateDo->date().day(),
+                          ui->dateDo->time().hour(),
+                          ui->dateDo->time().minute(),
+                          ui->dateDo->time().second());
+
+    unsigned int iFilterId = ui->txtSearchParam->text().toUInt();
+
+    ui->treeSporazumi->clear();
+
+    QList<QTreeWidgetItem *> listSporazumi;
+
     string strSqlStatement;
     strSqlStatement.append("BEGIN PUNI_PREGLED_ZAHTJEVA_NEW(:SPORAZUM_ID_PAR, :KUPAC_ID_PAR, :BROJ_DOK_PAR, :GIMOVINE_ID_PAR, :TEL_BROJ_PAR, :TICKET_ID_PAR, :DATUM_OD_PAR, :DATUM_DO_PAR, :LISTA_IND_PAR); END;");
     Statement *sqlStatement = g_DonatConn->createStatement();
@@ -1325,39 +1389,96 @@ void FrmPregledN::popunaPregledaZahtjevaNew()
         switch (m_iTipDodatnogFiltra) {
         case 3:
             {
-                sqlStatement->setNull(1, OCCINUMBER);
-                sqlStatement->setNull(2, OCCINUMBER);
-                sqlStatement->setString(3, ui->txtSearchParam->text().toStdString());
-                sqlStatement->setNull(4, OCCISTRING);
-                sqlStatement->setNull(5, OCCISTRING);
+                sqlStatement->setUInt(1, 0); // Sporazum Id
+                sqlStatement->setUInt(2, 0); // Kupac Id
+                sqlStatement->setString(3, ui->txtSearchParam->text().toStdString()); // Broj_Dokumenta
+                sqlStatement->setUInt(4, 0); // GrupaIMovineId
+                sqlStatement->setNull(5, OCCISTRING); // Tel Broj
+                sqlStatement->setNull(6, OCCISTRING); // Ticket
+                sqlStatement->setDate(7, datumOd); // Datum Od
+                sqlStatement->setDate(8, datumDo); // Datum Do
+                sqlStatement->setInt(9, 1); // Lista Ind Id
 
+//                sqlStatement->setNull(1, OCCINUMBER); // Sporazum_Id
+//                sqlStatement->setNull(2, OCCINUMBER); // Kupac_Id
+//                sqlStatement->setNull(3, OCCISTRING); // Broj_Dokumenta
+//                sqlStatement->setNull(4, OCCINUMBER); // GrupaIMovineId
+//                sqlStatement->setNull(5, OCCISTRING); // Tel Broj
+//                sqlStatement->setNull(6, OCCISTRING); // Ticket
+//                sqlStatement->setNull(7, OCCIDATE); // Datum Od
+//                sqlStatement->setNull(8, OCCIDATE); // Datum Do
+//                sqlStatement->setNull(9, OCCINUMBER); // Lista Ind Id
                 break;
             }
         case 4:
             {
+                sqlStatement->setUInt(1, 0); // Sporazum Id
+                sqlStatement->setUInt(2, 0); // Kupac Id
+                sqlStatement->setNull(3, OCCISTRING); // Broj_Dokumenta
+                sqlStatement->setUInt(4, 0); // GrupaIMovineId
+                sqlStatement->setString(5, ui->txtSearchParam->text().toStdString()); // Tel Broj
+                sqlStatement->setNull(6, OCCISTRING); // Ticket
+                sqlStatement->setDate(7, datumOd); // Datum Od
+                sqlStatement->setDate(8, datumDo); // Datum Do
+                sqlStatement->setInt(9, 1); // Lista Ind Id
                 break;
             }
         case 5:
             {
+                sqlStatement->setUInt(1, 0); // Sporazum Id
+                sqlStatement->setUInt(2, 0); // Kupac Id
+                sqlStatement->setNull(3, OCCISTRING); // Broj_Dokumenta
+                sqlStatement->setUInt(4, iFilterId); // GrupaIMovineId
+                sqlStatement->setNull(5, OCCISTRING); // Tel Broj
+                sqlStatement->setNull(6, OCCISTRING); // Ticket
+                sqlStatement->setDate(7, datumOd); // Datum Od
+                sqlStatement->setDate(8, datumDo); // Datum Do
+                sqlStatement->setInt(9, 1); // Lista Ind Id
                 break;
             }
         case 6:
             {
+                sqlStatement->setUInt(1, iFilterId); // Sporazum Id
+                sqlStatement->setUInt(2, 0); // Kupac Id
+                sqlStatement->setNull(3, OCCISTRING); // Broj_Dokumenta
+                sqlStatement->setUInt(4, 0); // GrupaIMovineId
+                sqlStatement->setNull(5, OCCISTRING); // Tel Broj
+                sqlStatement->setNull(6, OCCISTRING); // Ticket
+                sqlStatement->setDate(7, datumOd); // Datum Od
+                sqlStatement->setDate(8, datumDo); // Datum Do
+                sqlStatement->setInt(9, 1); // Lista Ind Id
                 break;
             }
         case 7:
             {
+                sqlStatement->setUInt(1, 0); // Sporazum Id
+                sqlStatement->setUInt(2, 0); // Kupac Id
+                sqlStatement->setNull(3, OCCISTRING); // Broj_Dokumenta
+                sqlStatement->setUInt(4, 0); // GrupaIMovineId
+                sqlStatement->setNull(5, OCCISTRING); // Tel Broj
+                sqlStatement->setString(6, ui->txtSearchParam->text().toStdString()); // Ticket
+                sqlStatement->setDate(7, datumOd); // Datum Od
+                sqlStatement->setDate(8, datumDo); // Datum Do
+                sqlStatement->setInt(9, 1); // Lista Ind Id
                 break;
             }
         case 8:
             {
+                sqlStatement->setUInt(1, 0); // Sporazum Id
+                sqlStatement->setUInt(2, iFilterId); // Kupac Id
+                sqlStatement->setNull(3, OCCISTRING); // Broj_Dokumenta
+                sqlStatement->setUInt(4, 0); // GrupaIMovineId
+                sqlStatement->setNull(5, OCCISTRING); // Tel Broj
+                sqlStatement->setNull(6, OCCISTRING); // Ticket
+                sqlStatement->setDate(7, datumOd); // Datum Od
+                sqlStatement->setDate(8, datumDo); // Datum Do
+                sqlStatement->setInt(9, 1); // Lista Ind Id
                 break;
             }
         default:
             break;
         }
         sqlStatement->executeUpdate();
-        int iBrojac = sqlStatement->getInt(7);
     }
     catch(SQLException &ex)
     {
@@ -1366,7 +1487,448 @@ void FrmPregledN::popunaPregledaZahtjevaNew()
                                        QMessageBox::Close);
     }
 
+    strSqlStatement.clear();
+    strSqlStatement.append("SELECT ROWNUM, SPORAZUM_ID, TO_CHAR(DATUM_OD,'DD.MM.YYYY') DATUM, FORMATIRANI_NAZIV, FORMATIRANA_ADRESA ADRESA, BROJ_DOK, 0 KUPAC_ID, 0 SPORAZUM_ID ");
+    strSqlStatement.append("FROM TEMP_PREGLED_ZAHTJEVA_LISTA ");
+    sqlStatement->setSQL(strSqlStatement);
 
+    try
+    {
+        ResultSet *rs = sqlStatement->executeQuery();
+
+        while(rs->next())
+        {
+            QTreeWidgetItem *itemSporazum = new QTreeWidgetItem();
+            itemSporazum->setText(0, QString::fromStdString(rs->getString(3)) +
+                                     tr(" ... ") +
+                                     QString::fromStdString(rs->getString(6)) +
+                                     tr(" ... ") +
+                                     QString::fromStdString(rs->getString(4)) +
+                                     tr(" ,  ") +
+                                     QString::fromStdString(rs->getString(5)));
+            itemSporazum->setText(1, QString::number(rs->getInt(1)));
+            itemSporazum->setText(2, QString::number(rs->getUInt(2)));
+            itemSporazum->setText(3, QString::fromStdString(rs->getString(3)));
+            itemSporazum->setText(4, QString::fromStdString(rs->getString(4)));
+            itemSporazum->setText(5, QString::fromStdString(rs->getString(5)));
+            itemSporazum->setText(6, QString::fromStdString(rs->getString(6)));
+            itemSporazum->setText(7, QString::number(rs->getUInt(7)));
+            itemSporazum->setText(8, QString::number(rs->getUInt(8)));
+            listSporazumi.append(itemSporazum);
+        }
+
+        sqlStatement->closeResultSet(rs);
+    }
+    catch(SQLException &ex)
+    {
+        QMessageBox::critical(this, tr("DONAT - Database Error"),
+                                       QString::fromStdString(ex.getMessage()),
+                                       QMessageBox::Close);
+    }
+
+    g_DonatConn->terminateStatement(sqlStatement);
+    strSqlStatement.erase();
+
+    ui->btnSporazumiUkupno->setText(tr("UK ...") + QString::number(listSporazumi.count()));
+    ui->btnSporazumiRange->setText(tr("1 ...") + QString::number(listSporazumi.count()));
+
+    if(!listSporazumi.empty())
+    {
+        listSporazumi.first()->setSelected(true);
+        ui->treeSporazumi->insertTopLevelItems(0, listSporazumi);
+        ui->treeSporazumi->expandAll();
+//        ui->treeSporazumi->collapseAll();
+//        ui->treeSporazumi->expandItem(listSporazumi.first());
+//        ui->treeSporazumi->setCurrentItem(listSporazumi.first());
+    }
+
+}
+void FrmPregledN::popunaKupca()
+{
+    if(m_iKupacId == 0)
+    {
+        return;
+    }
+
+    string strSqlStatement;
+
+    strSqlStatement.append("SELECT STRANKA_ID, FORMATIRANI_NAZIV, FORMATIRANA_ADRESA FROM HIJERARHIJA_STR_ADRESE3 WHERE ULSTRANKE_ID =  ");
+    strSqlStatement.append(cttl::itos(m_iKupacId));
+
+    Statement *sqlStatement = g_DonatConn->createStatement();
+    sqlStatement->setSQL(strSqlStatement);
+
+    try
+    {
+        ResultSet *rs = sqlStatement->executeQuery();
+
+        if(rs->next())
+        {
+            ui->lblKupacId->setText(QString::number(m_iKupacId));
+            ui->lblKupacNaziv->setText(QString::fromStdString(rs->getString(2)));
+            string strStrankaId;
+            strStrankaId = rs->getString(1);
+            if(cttl::str2int(m_iStrankaId, strStrankaId) == false)
+            {
+                m_iStrankaId = 0;
+            }
+        }
+
+        sqlStatement->closeResultSet(rs);
+    }
+    catch(SQLException &ex)
+    {
+        QMessageBox::critical(this, tr("DONAT - Database Error"),
+                                       QString::fromStdString(ex.getMessage()),
+                                       QMessageBox::Close);
+    }
+
+    g_DonatConn->terminateStatement(sqlStatement);
+    strSqlStatement.erase();
+}
+void FrmPregledN::popuniSporazumListu()
+{
+    ui->treeSporazumLista->clear();
+
+    Date datumOd = Date(g_DonatEnv,
+                          ui->dateOd->date().year(),
+                          ui->dateOd->date().month(),
+                          ui->dateOd->date().day(),
+                          ui->dateOd->time().hour(),
+                          ui->dateOd->time().minute(),
+                          ui->dateOd->time().second());
+
+    Date datumDo = Date(g_DonatEnv,
+                          ui->dateDo->date().year(),
+                          ui->dateDo->date().month(),
+                          ui->dateDo->date().day(),
+                          ui->dateDo->time().hour(),
+                          ui->dateDo->time().minute(),
+                          ui->dateDo->time().second());
+
+
+    QList<QTreeWidgetItem *> listSporazumLista;
+
+    string strSqlStatement;
+    strSqlStatement.append("BEGIN PUNI_PREGLED_ZAHTJEVA_NEW(:SPORAZUM_ID_PAR, :KUPAC_ID_PAR, :BROJ_DOK_PAR, :GIMOVINE_ID_PAR, :TEL_BROJ_PAR, :TICKET_ID_PAR, :DATUM_OD_PAR, :DATUM_DO_PAR, :LISTA_IND_PAR); END;");
+    Statement *sqlStatement = g_DonatConn->createStatement();
+    sqlStatement->setSQL(strSqlStatement);
+    sqlStatement->setAutoCommit(TRUE);
+
+    try
+    {
+        sqlStatement->setUInt(1, m_iSporazumId); // Sporazum Id
+        sqlStatement->setUInt(2, 0); // Kupac Id
+        sqlStatement->setNull(3, OCCISTRING); // Broj_Dokumenta
+        sqlStatement->setUInt(4, 0); // GrupaIMovineId
+        sqlStatement->setNull(5, OCCISTRING); // Tel Broj
+        sqlStatement->setNull(6, OCCISTRING); // Ticket
+        sqlStatement->setDate(7, datumOd); // Datum Od
+        sqlStatement->setDate(8, datumDo); // Datum Do
+        sqlStatement->setInt(9, 1); // Lista Ind Id
+        sqlStatement->executeUpdate();
+    }
+    catch(SQLException &ex)
+    {
+        QMessageBox::critical(this, tr("DONAT - Database Error"),
+                                       QString::fromStdString(ex.getMessage()),
+                                       QMessageBox::Close);
+    }
+
+    strSqlStatement.clear();
+    strSqlStatement.append("SELECT SPORAZUM_ID, BROJ_DOK, KUPAC_ID, GIMOVINE_ID, TEL_BROJ, KLASA, STATUS_PROVISIONING, ");
+    strSqlStatement.append(" STATUS_UGOVARANJE, STATUS_BILLING, ORDER_ID, TICKET_ID, TO_CHAR(DATUM_ZAHTJEVA, 'DD.MM.YYYY HH24:MI') DATUM_ZAHTJEVA, ");
+    strSqlStatement.append(" DATUM_ZADNJE_PROMJENE, OPERATER, PRODAVAC, KANAL, NAPOMENA_PROVISIONING, NVL(AKTIVNOST, 200) AKTIVNOST, ");
+    strSqlStatement.append(" NVL(ZAVRSENOST, 200) ZAVRSENOST, ID, STATUS_KOMUNIKACIJA_KORISNIKU ");
+    strSqlStatement.append(" FROM TEMP_PREGLED_ZAHTJEVA ORDER BY SPORAZUM_ID, ID ");
+    sqlStatement->setSQL(strSqlStatement);
+
+    try
+    {
+        ResultSet *rs = sqlStatement->executeQuery();
+
+        QString strNaziv1 = QString();
+        QString strNaziv2 = QString();
+        unsigned int iSporazumId = 0;
+
+        while(rs->next())
+        {
+            strNaziv1 = QString::fromStdString(rs->getString(12)) +
+                        tr(" ... ") +
+                        QString::fromStdString(rs->getString(2));
+            strNaziv2 = QString::fromStdString(rs->getString(5)) +
+                        tr("  ") +
+                        QString::fromStdString(rs->getString(6));
+            iSporazumId = rs->getUInt(1);
+
+            if(listSporazumLista.count() == 0)
+            {
+                QTreeWidgetItem *itemSporazum = new QTreeWidgetItem();
+                itemSporazum->setText(0, strNaziv1);
+                itemSporazum->setIcon(1, m_iconTransparent);
+                itemSporazum->setIcon(2, m_iconTransparent);
+                itemSporazum->setText(3, QString::number(rs->getUInt(1)));
+                itemSporazum->setText(4, QString::number(rs->getUInt(20)));
+                itemSporazum->setText(5, QString::fromStdString(rs->getString(5)));
+                itemSporazum->setText(6, QString::fromStdString(rs->getString(6)));
+                itemSporazum->setText(7, QString::fromStdString(rs->getString(2)));
+                itemSporazum->setText(8, QString::fromStdString(rs->getString(12)));
+                itemSporazum->setText(9, QString::number(rs->getInt(18)));
+                itemSporazum->setText(10, QString::number(rs->getInt(19)));
+                itemSporazum->setText(11, QString::number(rs->getUInt(4)));
+                listSporazumLista.append(itemSporazum);
+
+                QTreeWidgetItem *itemSporazumstavka = new QTreeWidgetItem();
+                itemSporazumstavka->setText(0, strNaziv2);
+                if(rs->isNull(19) == false)
+                {
+                    switch (rs->getInt(19))
+                    {
+                        case 0:
+                        {
+                            itemSporazumstavka->setIcon(1, m_iconZuti);
+                            break;
+                        }
+                        case 1:
+                        {
+                            itemSporazumstavka->setIcon(1, m_iconZeleni);
+                            break;
+                        }
+                        case 2:
+                        {
+                            itemSporazumstavka->setIcon(1, m_iconCrveni);
+                            break;
+                        }
+                        default:
+                        {
+                            itemSporazumstavka->setIcon(1, m_iconTransparent);
+                            break;
+                        }
+                    }
+                }
+                if(rs->isNull(18) == false)
+                {
+                    switch (rs->getInt(18))
+                    {
+                        case 0:
+                        {
+                            itemSporazumstavka->setIcon(2, m_iconPromjena);
+                            break;
+                        }
+                        case 1:
+                        {
+                            itemSporazumstavka->setIcon(2, m_iconUkljucenje);
+                            break;
+                        }
+                        case 2:
+                        {
+                            itemSporazumstavka->setIcon(2, m_iconIskljucenje);
+                            break;
+                        }
+                        default:
+                        {
+                            itemSporazumstavka->setIcon(1, m_iconTransparent);
+                            break;
+                        }
+                    }
+                }
+                itemSporazumstavka->setText(3, QString::number(rs->getUInt(1)));
+                itemSporazumstavka->setText(4, QString::number(rs->getUInt(20)));
+                itemSporazumstavka->setText(5, QString::fromStdString(rs->getString(5)));
+                itemSporazumstavka->setText(6, QString::fromStdString(rs->getString(6)));
+                itemSporazumstavka->setText(7, QString::fromStdString(rs->getString(2)));
+                itemSporazumstavka->setText(8, QString::fromStdString(rs->getString(12)));
+                itemSporazumstavka->setText(9, QString::number(rs->getInt(18)));
+                itemSporazumstavka->setText(10, QString::number(rs->getInt(19)));
+                itemSporazumstavka->setText(11, QString::number(rs->getUInt(4)));
+                listSporazumLista.append(itemSporazumstavka);
+                itemSporazum->addChild(itemSporazumstavka);
+            }
+            else
+            {
+                bool bPostoji = false;
+                int iListSize = listSporazumLista.size();
+                for(int i = 0; i < iListSize; ++i)
+                {
+                    if(listSporazumLista.at(i)->text(3).toUInt() == iSporazumId && listSporazumLista.at(i)->childCount() > 0)
+                    {
+                        QTreeWidgetItem *itemSporazum = new QTreeWidgetItem();
+                        itemSporazum->setText(0, strNaziv2);
+                        if(rs->isNull(19) == false)
+                        {
+                            switch (rs->getInt(19))
+                            {
+                                case 0:
+                                {
+                                    itemSporazum->setIcon(1, m_iconZuti);
+                                    break;
+                                }
+                                case 1:
+                                {
+                                    itemSporazum->setIcon(1, m_iconZeleni);
+                                    break;
+                                }
+                                case 2:
+                                {
+                                    itemSporazum->setIcon(1, m_iconCrveni);
+                                    break;
+                                }
+                                default:
+                                {
+                                    itemSporazum->setIcon(1, m_iconTransparent);
+                                    break;
+                                }
+                            }
+                        }
+                        if(rs->isNull(18) == false)
+                        {
+                            switch (rs->getInt(18))
+                            {
+                                case 0:
+                                {
+                                    itemSporazum->setIcon(2, m_iconPromjena);
+                                    break;
+                                }
+                                case 1:
+                                {
+                                    itemSporazum->setIcon(2, m_iconUkljucenje);
+                                    break;
+                                }
+                                case 2:
+                                {
+                                    itemSporazum->setIcon(2, m_iconIskljucenje);
+                                    break;
+                                }
+                                default:
+                                {
+                                    itemSporazum->setIcon(1, m_iconTransparent);
+                                    break;
+                                }
+                            }
+                        }
+                        itemSporazum->setText(3, QString::number(rs->getUInt(1)));
+                        itemSporazum->setText(4, QString::number(rs->getUInt(20)));
+                        itemSporazum->setText(5, QString::fromStdString(rs->getString(5)));
+                        itemSporazum->setText(6, QString::fromStdString(rs->getString(6)));
+                        itemSporazum->setText(7, QString::fromStdString(rs->getString(2)));
+                        itemSporazum->setText(8, QString::fromStdString(rs->getString(12)));
+                        itemSporazum->setText(9, QString::number(rs->getInt(18)));
+                        itemSporazum->setText(10, QString::number(rs->getInt(19)));
+                        itemSporazum->setText(11, QString::number(rs->getUInt(4)));
+                        listSporazumLista.append(itemSporazum);
+                        listSporazumLista.at(i)->addChild(itemSporazum);
+                        bPostoji = true;
+                    }
+                }
+                if(bPostoji == false)
+                {
+                    QTreeWidgetItem *itemSporazum = new QTreeWidgetItem();
+                    itemSporazum->setText(0, strNaziv1);
+                    itemSporazum->setIcon(1, m_iconTransparent);
+                    itemSporazum->setIcon(2, m_iconTransparent);
+                    itemSporazum->setText(3, QString::number(rs->getUInt(1)));
+                    itemSporazum->setText(4, QString::number(rs->getUInt(20)));
+                    itemSporazum->setText(5, QString::fromStdString(rs->getString(5)));
+                    itemSporazum->setText(6, QString::fromStdString(rs->getString(6)));
+                    itemSporazum->setText(7, QString::fromStdString(rs->getString(2)));
+                    itemSporazum->setText(8, QString::fromStdString(rs->getString(12)));
+                    itemSporazum->setText(9, QString::number(rs->getInt(18)));
+                    itemSporazum->setText(10, QString::number(rs->getInt(19)));
+                    itemSporazum->setText(11, QString::number(rs->getUInt(4)));
+                    listSporazumLista.append(itemSporazum);
+
+                    QTreeWidgetItem *itemSporazumstavka = new QTreeWidgetItem();
+                    itemSporazumstavka->setText(0, strNaziv2);
+                    if(rs->isNull(19) == false)
+                    {
+                        switch (rs->getInt(19))
+                        {
+                            case 0:
+                            {
+                                itemSporazumstavka->setIcon(1, m_iconZuti);
+                                break;
+                            }
+                            case 1:
+                            {
+                                itemSporazumstavka->setIcon(1, m_iconZeleni);
+                                break;
+                            }
+                            case 2:
+                            {
+                                itemSporazumstavka->setIcon(1, m_iconCrveni);
+                                break;
+                            }
+                            default:
+                            {
+                                itemSporazumstavka->setIcon(1, m_iconTransparent);
+                                break;
+                            }
+                        }
+                    }
+                    if(rs->isNull(18) == false)
+                    {
+                        switch (rs->getInt(18))
+                        {
+                            case 0:
+                            {
+                                itemSporazumstavka->setIcon(2, m_iconPromjena);
+                                break;
+                            }
+                            case 1:
+                            {
+                                itemSporazumstavka->setIcon(2, m_iconUkljucenje);
+                                break;
+                            }
+                            case 2:
+                            {
+                                itemSporazumstavka->setIcon(2, m_iconIskljucenje);
+                                break;
+                            }
+                            default:
+                            {
+                                itemSporazumstavka->setIcon(1, m_iconTransparent);
+                                break;
+                            }
+                        }
+                    }
+                    itemSporazumstavka->setText(3, QString::number(rs->getUInt(1)));
+                    itemSporazumstavka->setText(4, QString::number(rs->getUInt(20)));
+                    itemSporazumstavka->setText(5, QString::fromStdString(rs->getString(5)));
+                    itemSporazumstavka->setText(6, QString::fromStdString(rs->getString(6)));
+                    itemSporazumstavka->setText(7, QString::fromStdString(rs->getString(2)));
+                    itemSporazumstavka->setText(8, QString::fromStdString(rs->getString(12)));
+                    itemSporazumstavka->setText(9, QString::number(rs->getInt(18)));
+                    itemSporazumstavka->setText(10, QString::number(rs->getInt(19)));
+                    itemSporazumstavka->setText(11, QString::number(rs->getUInt(4)));
+                    listSporazumLista.append(itemSporazumstavka);
+                    itemSporazum->addChild(itemSporazumstavka);
+                }
+            }
+        }
+
+        sqlStatement->closeResultSet(rs);
+    }
+    catch(SQLException &ex)
+    {
+        QMessageBox::critical(this, tr("DONAT - Database Error"),
+                                       QString::fromStdString(ex.getMessage()),
+                                       QMessageBox::Close);
+    }
+
+    g_DonatConn->terminateStatement(sqlStatement);
+    strSqlStatement.erase();
+
+    if(!listSporazumLista.empty())
+    {
+        listSporazumLista.first()->setSelected(true);
+        ui->treeSporazumLista->insertTopLevelItems(0, listSporazumLista);
+        ui->treeSporazumLista->expandAll();
+//        ui->treeSporazumi->collapseAll();
+//        ui->treeSporazumi->expandItem(listSporazumLista.first());
+//        ui->treeSporazumi->setCurrentItem(listSporazumLista.first());
+    }
+
+    popunaKupca();
 }
 
 // [Event Handlers]
@@ -1540,6 +2102,21 @@ void FrmPregledN::on_treeListeGrupa_itemPressed(QTreeWidgetItem *item, int UNUSE
     }
 }
 
+void FrmPregledN::on_treeSporazumi_itemPressed(QTreeWidgetItem *item, int UNUSED(column))
+{
+    m_iSporazumId = item->text(2).toUInt();
+    m_iKupacId = item->text(7).toUInt();
+    m_iStrankaId = item->text(8).toUInt();
+
+    initSporazum();
+    popuniSporazumListu();
+}
+
+void FrmPregledN::on_treeSporazumLista_itemPressed(QTreeWidgetItem *item, int UNUSED(column))
+{
+
+}
+
 void FrmPregledN::on_cboPretragaKlase_currentIndexChanged(int index)
 {
     if(index == 0)
@@ -1624,6 +2201,8 @@ void FrmPregledN::on_btnTrazi_clicked()
 
 
 } // namespace sporazumi
+
+
 
 
 

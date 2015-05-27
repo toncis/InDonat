@@ -1272,6 +1272,12 @@
                     <property name="cursor">
                      <cursorShape>PointingHandCursor</cursorShape>
                     </property>
+                    <property name="statusTip">
+                     <string>Traži sporazume.</string>
+                    </property>
+                    <property name="whatsThis">
+                     <string>Traži sporazume.</string>
+                    </property>
                     <property name="text">
                      <string>GO</string>
                     </property>
@@ -1416,10 +1422,10 @@
                      <string>Identifikacija korisnika</string>
                     </property>
                     <property name="statusTip">
-                     <string>Identifikacija korisnika</string>
+                     <string/>
                     </property>
                     <property name="whatsThis">
-                     <string>Identifikacija korisnika</string>
+                     <string/>
                     </property>
                    </widget>
                   </item>
@@ -1774,10 +1780,10 @@
                      <string>Pretraga korisnika.</string>
                     </property>
                     <property name="statusTip">
-                     <string>Pretraga korisnika.</string>
+                     <string/>
                     </property>
                     <property name="whatsThis">
-                     <string>Pretraga korisnika.</string>
+                     <string/>
                     </property>
                     <property name="text">
                      <string/>
@@ -1823,10 +1829,10 @@
                      <string>Pretraga korisnika.</string>
                     </property>
                     <property name="statusTip">
-                     <string>Pretraga korisnika.</string>
+                     <string/>
                     </property>
                     <property name="whatsThis">
-                     <string>Pretraga korisnika.</string>
+                     <string/>
                     </property>
                     <property name="text">
                      <string/>
@@ -2184,10 +2190,10 @@
                      <string>Identifikacija korisnika</string>
                     </property>
                     <property name="statusTip">
-                     <string>Identifikacija korisnika</string>
+                     <string/>
                     </property>
                     <property name="whatsThis">
-                     <string>Identifikacija korisnika</string>
+                     <string/>
                     </property>
                    </widget>
                   </item>
@@ -3779,7 +3785,7 @@
                 <number>0</number>
                </property>
                <item>
-                <widget class="QTreeWidget" name="treeSporazumStavke">
+                <widget class="QTreeWidget" name="treeSporazumLista">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -3795,7 +3801,7 @@
                   <bool>true</bool>
                  </property>
                  <property name="columnCount">
-                  <number>2</number>
+                  <number>11</number>
                  </property>
                  <column>
                   <property name="text">
@@ -3805,6 +3811,51 @@
                  <column>
                   <property name="text">
                    <string notr="true">2</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string notr="true">3</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string notr="true">4</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string notr="true">5</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string notr="true">6</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string notr="true">7</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string notr="true">8</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string notr="true">9</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string notr="true">10</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string notr="true">11</string>
                   </property>
                  </column>
                 </widget>

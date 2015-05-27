@@ -93,6 +93,10 @@ private slots:
 
     void on_btnFilterKupacId_clicked();
 
+    void on_treeSporazumi_itemPressed(QTreeWidgetItem *item, int column);
+
+    void on_treeSporazumLista_itemPressed(QTreeWidgetItem *item, int column);
+
 private:
     Ui::FrmPregledN *ui;
 
@@ -115,6 +119,14 @@ private:
     int m_iListaSub;
     int m_iListaSel;
 
+    QIcon m_iconUkljucenje;
+    QIcon m_iconPromjena;
+    QIcon m_iconIskljucenje;
+    QIcon m_iconZuti;
+    QIcon m_iconZeleni;
+    QIcon m_iconCrveni;
+    QIcon m_iconTransparent;
+
     void initForm();
     void initSporazum();
     void initSlog();
@@ -128,6 +140,8 @@ private:
     void popunaUgovoraL2();
     void popunaObavijestL1();
     void popunaPregledaZahtjevaNew();
+    void popunaKupca();
+    void popuniSporazumListu();
 
     void addNewGrupaToListGrupe(QList<QTreeWidgetItem *> listListaGrupa, QTreeWidgetItem *itemGrupa);
 
