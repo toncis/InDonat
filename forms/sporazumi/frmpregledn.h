@@ -24,6 +24,7 @@
 
 #include <QDialog>
 #include <QTreeWidgetItem>
+#include <QDateTime>
 #include "donat.h"
 
 namespace Ui {
@@ -105,6 +106,11 @@ private:
     unsigned int m_iSporazumId;
     unsigned int m_iStrankaId;
     unsigned int m_iKupacId;
+    unsigned int m_iSporazumSlogId;
+    unsigned int m_iPoslovniProcesId;
+    unsigned int m_iGrupaImovineId;
+    string m_strBrojDokumenta;
+    QDateTime m_dateDatumzahtjeva;
 
     int m_iListaGrupa;
     int m_iTipKorisnika;
@@ -142,6 +148,12 @@ private:
     void popunaPregledaZahtjevaNew();
     void popunaKupca();
     void popuniSporazumListu();
+    void popunaSporazumSlog();
+    void popunaWwmsGreska();
+    void popunaWwmsRazlog();
+    void popunaWwmsStorno();
+    void popunaSporazumAktivnosti();
+    void popunaOstalo();
 
     void addNewGrupaToListGrupe(QList<QTreeWidgetItem *> listListaGrupa, QTreeWidgetItem *itemGrupa);
 

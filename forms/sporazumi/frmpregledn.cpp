@@ -72,7 +72,7 @@ void FrmPregledN::initForm()
     ui->treeSporazumi->hideColumn(5);
     ui->treeSporazumi->hideColumn(6);
 
-    ui->treeSporazumLista->setColumnWidth(0, 230);
+    ui->treeSporazumLista->setColumnWidth(0, 200);
     ui->treeSporazumLista->setColumnWidth(1, 18);
     ui->treeSporazumLista->setColumnWidth(2, 18);
     ui->treeSporazumLista->hideColumn(3);
@@ -155,13 +155,29 @@ void FrmPregledN::initSporazum()
     ui->treeAktivnosti->clear();
     ui->treeStavke->clear();
 
-    ui->lblZahtjevFullTitle->clear();
     ui->lblKupacId->clear();
     ui->lblKupacNaziv->clear();
+
+    initSlog();
 
 }
 void FrmPregledN::initSlog()
 {
+    m_iSporazumSlogId = 0;
+    m_iGrupaImovineId = 0;
+    m_iPoslovniProcesId = 0;
+    m_strBrojDokumenta = "";
+    m_dateDatumzahtjeva = QDateTime();
+
+    ui->lblTicket->clear();
+    ui->lblTelBroj->clear();
+    ui->lblGrupaImovineId->clear();
+    ui->lblSporazumCreateTitle->clear();
+    ui->lblPoslovniProcesId->clear();
+    ui->lblSporazumDatumzadnjeIzmjene->clear();
+    ui->lblGrupaImovineStatus->clear();
+    ui->lblGrupaImovineAktivnost->clear();
+    ui->lblOpis->clear();
 }
 
 void FrmPregledN::setKorisnik()
@@ -1928,7 +1944,279 @@ void FrmPregledN::popuniSporazumListu()
 //        ui->treeSporazumi->setCurrentItem(listSporazumLista.first());
     }
 
+    initSlog();
+    ui->lblSporazumId->setText(QString::number(m_iSporazumId));
+    m_iSporazumSlogId = listSporazumLista.first()->text(4).toUInt();
+    popunaSporazumSlog();
     popunaKupca();
+}
+void FrmPregledN::popunaSporazumSlog()
+{
+    if(m_iSporazumSlogId == 0)
+    {
+        return;
+    }
+
+    string strSqlStatement;
+
+    strSqlStatement.append("SELECT SPORAZUM_ID, BROJ_DOK, KUPAC_ID, GIMOVINE_ID, TEL_BROJ, KLASA, STATUS_PROVISIONING, ");
+    strSqlStatement.append(" STATUS_UGOVARANJE, STATUS_BILLING, ORDER_ID, TICKET_ID, TO_CHAR(DATUM_ZAHTJEVA, 'DD.MM.YYYY HH24:MI') DATUM_ZAHTJEVA, ");
+    strSqlStatement.append(" TO_CHAR(DATUM_ZADNJE_PROMJENE, 'DD.MM.YYYY HH24:MI') DATUM_ZADNJE_PROMJENE, OPERATER, PRODAVAC, KANAL, NAPOMENA_PROVISIONING, NVL(AKTIVNOST, 200) AKTIVNOST, ");
+    strSqlStatement.append(" NVL(ZAVRSENOST, 200) ZAVRSENOST, ID, STATUS_KOMUNIKACIJA_KORISNIKU ");
+    strSqlStatement.append(" FROM TEMP_PREGLED_ZAHTJEVA WHERE ID = ");
+    strSqlStatement.append(cttl::itos(m_iSporazumSlogId));
+
+    Statement *sqlStatement = g_DonatConn->createStatement();
+    sqlStatement->setSQL(strSqlStatement);
+
+    try
+    {
+        ResultSet *rs = sqlStatement->executeQuery();
+
+        if(rs->next())
+        {
+            ui->lblSporazumId->setText(QString::number(rs->getUInt(1)));
+            if(rs->isNull(2) == false)
+            {
+                ui->lblTicket->setText(QString::number(rs->getUInt(11)));
+            }
+            ui->lblTelBroj->setText(QString::fromStdString(rs->getString(5)));
+
+            if(rs->isNull(10) == true)
+            {
+                m_iPoslovniProcesId = 0;
+            }
+            else
+            {
+                m_iPoslovniProcesId = rs->getUInt(10);
+                ui->lblPoslovniProcesId->setText(QString::number(rs->getUInt(10)));
+            }
+
+            if(rs->isNull(4) == true)
+            {
+                m_iGrupaImovineId = 0;
+            }
+            else
+            {
+                ui->lblGrupaImovineId->setText(QString::number(rs->getUInt(4)));
+                m_iGrupaImovineId = rs->getUInt(4);
+            }
+
+            ui->lblSporazumCreateTitle->setText(QString::fromStdString(rs->getString(16)) +
+                                                tr(" ... ") +
+                                                QString::fromStdString(rs->getString(14)) +
+                                                tr(" ... ") +
+                                                QString::fromStdString(rs->getString(15))
+                                                );
+
+            m_strBrojDokumenta = rs->getString(2);
+            m_dateDatumzahtjeva = QDateTime::fromString(QString::fromStdString(rs->getString(12)), tr("dd.MM.yyyy hh:mm"));
+            ui->lblSporazumDatumzadnjeIzmjene->setText(QString::fromStdString(rs->getString(13)));
+
+            switch (rs->getInt(18)) {
+            case 0:
+            {
+                ui->lblGrupaImovineAktivnost->setText(tr("PROMJENA"));
+                break;
+            }
+            case 1:
+            {
+                ui->lblGrupaImovineAktivnost->setText(tr("UKLJUČENJE"));
+                break;
+            }
+            case 2:
+            {
+                ui->lblGrupaImovineAktivnost->setText(tr("ISKLJUČENJE"));
+                break;
+            }
+            default:
+                break;
+            }
+
+            switch (rs->getInt(19)) {
+            case 0:
+            {
+                ui->lblGrupaImovineStatus->setText(tr("U TIJEKU"));
+                break;
+            }
+            case 1:
+            {
+                ui->lblGrupaImovineStatus->setText(tr("ZATVORENO"));
+                break;
+            }
+            case 2:
+            {
+                ui->lblGrupaImovineStatus->setText(tr("STORNIRANO"));
+                break;
+            }
+            default:
+                break;
+            }
+        }
+
+        ui->lblOpis->setText(QString::fromStdString(rs->getString(7)) +
+                             tr("\n") +
+                             QString::fromStdString(rs->getString(17)));
+
+        sqlStatement->closeResultSet(rs);
+    }
+    catch(SQLException &ex)
+    {
+        QMessageBox::critical(this, tr("DONAT - Database Error"),
+                                       QString::fromStdString(ex.getMessage()),
+                                       QMessageBox::Close);
+    }
+
+    g_DonatConn->terminateStatement(sqlStatement);
+    strSqlStatement.erase();
+
+    switch (m_iListaSub)
+    {
+        case 1:
+        {
+            popunaWwmsGreska();
+            break;
+        }
+        case 2:
+        {
+            popunaWwmsRazlog();
+            break;
+        }
+        case 3:
+        {
+            popunaWwmsStorno();
+            break;
+        }
+        default:
+            break;
+    }
+
+
+}
+void FrmPregledN::popunaWwmsGreska()
+{
+    if(m_iPoslovniProcesId == 0)
+    {
+        return;
+    }
+
+    string strSqlStatement;
+    strSqlStatement.append("SELECT ERROR_RECEIVING (");
+    strSqlStatement.append(cttl::itos(m_iPoslovniProcesId));
+    strSqlStatement.append(") GRESKA FROM DUAL ");
+    Statement *sqlStatement = g_DonatConn->createStatement();
+    sqlStatement->setSQL(strSqlStatement);
+
+    try
+    {
+        ResultSet *rs = sqlStatement->executeQuery();
+
+        if(rs->next())
+        {
+            ui->lblOpis->setText(ui->lblOpis->text() +
+                                 tr("\n") +
+                                 QString::fromStdString(rs->getString(1)) +
+                                 tr("\nStornirati Zahtjev"));
+        }
+
+        sqlStatement->closeResultSet(rs);
+    }
+    catch(SQLException &ex)
+    {
+        QMessageBox::critical(this, tr("DONAT - Database Error"),
+                                       QString::fromStdString(ex.getMessage()),
+                                       QMessageBox::Close);
+    }
+
+    g_DonatConn->terminateStatement(sqlStatement);
+    strSqlStatement.erase();
+}
+void FrmPregledN::popunaWwmsRazlog()
+{
+    if(m_iPoslovniProcesId == 0)
+    {
+        return;
+    }
+
+    string strSqlStatement;
+    strSqlStatement.append("SELECT ORDER_ID, REPLACE(STATUS_REASON,CHR(10),' ') STATUS_REASON, NVL(SOLUTIONPROPOSAL,' ') PRIJEDLOG ");
+    strSqlStatement.append(" , CASE WHEN UPPER(SOLUTIONPROPOSAL) LIKE '%FGSM%' THEN 1 ELSE 0 END FGSM ");
+    strSqlStatement.append(" FROM WWMS_RESPONSE1 W1 WHERE ORDER_ID = '");
+    strSqlStatement.append(cttl::itos(m_iPoslovniProcesId));
+    strSqlStatement.append("' AND RESP_NUM=(SELECT MAX(RESP_NUM) FROM WWMS_RESPONSE1 W2 WHERE W1.ORDER_ID=W2.ORDER_ID) ");
+    Statement *sqlStatement = g_DonatConn->createStatement();
+    sqlStatement->setSQL(strSqlStatement);
+
+    try
+    {
+        ResultSet *rs = sqlStatement->executeQuery();
+
+        if(rs->next())
+        {
+            ui->lblOpis->setText(ui->lblOpis->text() +
+                                 tr("\n") +
+                                 QString::fromStdString(rs->getString(2)) +
+                                 tr("\n") +
+                                 QString::fromStdString(rs->getString(3)));
+        }
+
+        sqlStatement->closeResultSet(rs);
+    }
+    catch(SQLException &ex)
+    {
+        QMessageBox::critical(this, tr("DONAT - Database Error"),
+                                       QString::fromStdString(ex.getMessage()),
+                                       QMessageBox::Close);
+    }
+
+    g_DonatConn->terminateStatement(sqlStatement);
+    strSqlStatement.erase();
+}
+void FrmPregledN::popunaWwmsStorno()
+{
+    if(m_iPoslovniProcesId == 0)
+    {
+        return;
+    }
+
+    string strSqlStatement;
+    strSqlStatement.append("SELECT NVL(STATUS_REASON,'NIJE DEFINIRANO') STATUS_REASON, NVL(SOLUTIONPROPOSAL,'NIJE DEFINIRANO') SOLUTIONPROPOSAL ");
+    strSqlStatement.append(" FROM WWMS_RESPONSE1 WHERE ORDER_ID = '");
+    strSqlStatement.append(cttl::itos(m_iPoslovniProcesId));
+    strSqlStatement.append("' AND STATUS LIKE 'WWMS_CANCEL_REQUEST%' ");
+    Statement *sqlStatement = g_DonatConn->createStatement();
+    sqlStatement->setSQL(strSqlStatement);
+
+    try
+    {
+        ResultSet *rs = sqlStatement->executeQuery();
+
+        if(rs->next())
+        {
+            ui->lblOpis->setText(ui->lblOpis->text() +
+                                 tr("\n") +
+                                 QString::fromStdString(rs->getString(2)) +
+                                 tr("\n") +
+                                 QString::fromStdString(rs->getString(3)));
+        }
+
+        sqlStatement->closeResultSet(rs);
+    }
+    catch(SQLException &ex)
+    {
+        QMessageBox::critical(this, tr("DONAT - Database Error"),
+                                       QString::fromStdString(ex.getMessage()),
+                                       QMessageBox::Close);
+    }
+
+    g_DonatConn->terminateStatement(sqlStatement);
+    strSqlStatement.erase();
+}
+void FrmPregledN::popunaSporazumAktivnosti()
+{
+}
+void FrmPregledN::popunaOstalo()
+{
 }
 
 // [Event Handlers]
@@ -2104,17 +2392,23 @@ void FrmPregledN::on_treeListeGrupa_itemPressed(QTreeWidgetItem *item, int UNUSE
 
 void FrmPregledN::on_treeSporazumi_itemPressed(QTreeWidgetItem *item, int UNUSED(column))
 {
+    setCursor(Qt::BusyCursor);
+
     m_iSporazumId = item->text(2).toUInt();
     m_iKupacId = item->text(7).toUInt();
     m_iStrankaId = item->text(8).toUInt();
 
     initSporazum();
     popuniSporazumListu();
+
+    setCursor(Qt::ArrowCursor);
 }
 
 void FrmPregledN::on_treeSporazumLista_itemPressed(QTreeWidgetItem *item, int UNUSED(column))
 {
-
+    initSlog();
+    m_iSporazumSlogId = item->text(4).toUInt();
+    popunaSporazumSlog();
 }
 
 void FrmPregledN::on_cboPretragaKlase_currentIndexChanged(int index)
