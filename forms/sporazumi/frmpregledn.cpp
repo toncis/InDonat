@@ -27,6 +27,14 @@
 #include "forms/kontakt/frmkanalprodaje.h"
 #include "forms/kontakt/frmkanalprodajekorisnik.h"
 
+#include "forms/sporazumi/frmdonatpregled.h"
+#include "forms/sporazumi/frmpregledsporazuma.h"
+#include "forms/sporazumi/frmpregledprocesa.h"
+#include "forms/sporazumi/frmwwmspregled.h"
+
+#include "forms/kontakt/frmkontaktdokumenti.h"
+#include "forms/kontakt/frmkontaktdokumenti1.h"
+
 
 namespace Sporazumi {
 
@@ -83,6 +91,19 @@ void FrmPregledN::initForm()
     ui->treeSporazumLista->hideColumn(8);
     ui->treeSporazumLista->hideColumn(9);
     ui->treeSporazumLista->hideColumn(10);
+    ui->treeSporazumLista->hideColumn(11);
+    ui->treeSporazumLista->hideColumn(12);
+    ui->treeSporazumLista->hideColumn(13);
+    ui->treeSporazumLista->hideColumn(14);
+    ui->treeSporazumLista->hideColumn(15);
+    ui->treeSporazumLista->hideColumn(16);
+    ui->treeSporazumLista->hideColumn(17);
+    ui->treeSporazumLista->hideColumn(18);
+    ui->treeSporazumLista->hideColumn(19);
+    ui->treeSporazumLista->hideColumn(20);
+    ui->treeSporazumLista->hideColumn(21);
+    ui->treeSporazumLista->hideColumn(22);
+    ui->treeSporazumLista->hideColumn(23);
 
     ui->treeAktivnosti->setColumnWidth(0, 200);
     ui->treeAktivnosti->hideColumn(1);
@@ -1683,8 +1704,8 @@ void FrmPregledN::popuniSporazumListu()
 
     strSqlStatement.clear();
     strSqlStatement.append("SELECT SPORAZUM_ID, BROJ_DOK, KUPAC_ID, GIMOVINE_ID, TEL_BROJ, KLASA, STATUS_PROVISIONING, ");
-    strSqlStatement.append(" STATUS_UGOVARANJE, STATUS_BILLING, ORDER_ID, TICKET_ID, TO_CHAR(DATUM_ZAHTJEVA, 'DD.MM.YYYY HH24:MI') DATUM_ZAHTJEVA, ");
-    strSqlStatement.append(" DATUM_ZADNJE_PROMJENE, OPERATER, PRODAVAC, KANAL, NAPOMENA_PROVISIONING, NVL(AKTIVNOST, 200) AKTIVNOST, ");
+    strSqlStatement.append(" STATUS_UGOVARANJE, STATUS_BILLING, ORDER_ID, NVL(TICKET_ID, 0) TICKET_ID, TO_CHAR(DATUM_ZAHTJEVA, 'DD.MM.YYYY HH24:MI') DATUM_ZAHTJEVA, ");
+    strSqlStatement.append(" TO_CHAR(DATUM_ZADNJE_PROMJENE, 'DD.MM.YYYY HH24:MI') DATUM_ZADNJE_PROMJENE, OPERATER, PRODAVAC, KANAL, NAPOMENA_PROVISIONING, NVL(AKTIVNOST, 200) AKTIVNOST, ");
     strSqlStatement.append(" NVL(ZAVRSENOST, 200) ZAVRSENOST, ID, STATUS_KOMUNIKACIJA_KORISNIKU ");
     strSqlStatement.append(" FROM TEMP_PREGLED_ZAHTJEVA ORDER BY SPORAZUM_ID, ID ");
     sqlStatement->setSQL(strSqlStatement);
@@ -1714,14 +1735,26 @@ void FrmPregledN::popuniSporazumListu()
                 itemSporazum->setIcon(1, m_iconTransparent);
                 itemSporazum->setIcon(2, m_iconTransparent);
                 itemSporazum->setText(3, QString::number(rs->getUInt(1)));
-                itemSporazum->setText(4, QString::number(rs->getUInt(20)));
-                itemSporazum->setText(5, QString::fromStdString(rs->getString(5)));
-                itemSporazum->setText(6, QString::fromStdString(rs->getString(6)));
-                itemSporazum->setText(7, QString::fromStdString(rs->getString(2)));
-                itemSporazum->setText(8, QString::fromStdString(rs->getString(12)));
-                itemSporazum->setText(9, QString::number(rs->getInt(18)));
-                itemSporazum->setText(10, QString::number(rs->getInt(19)));
-                itemSporazum->setText(11, QString::number(rs->getUInt(4)));
+                itemSporazum->setText(4, QString::fromStdString(rs->getString(2)));
+                itemSporazum->setText(5, QString::number(rs->getUInt(3)));
+                itemSporazum->setText(6, QString::number(rs->getUInt(4)));
+                itemSporazum->setText(7, QString::fromStdString(rs->getString(5)));
+                itemSporazum->setText(8, QString::fromStdString(rs->getString(6)));
+                itemSporazum->setText(9, QString::fromStdString(rs->getString(7)));
+                itemSporazum->setText(10, QString::fromStdString(rs->getString(8)));
+                itemSporazum->setText(11, QString::fromStdString(rs->getString(9)));
+                itemSporazum->setText(12, QString::number(rs->getUInt(10)));
+                itemSporazum->setText(13, QString::number(rs->getUInt(11)));
+                itemSporazum->setText(14, QString::fromStdString(rs->getString(12)));
+                itemSporazum->setText(15, QString::fromStdString(rs->getString(13)));
+                itemSporazum->setText(16, QString::fromStdString(rs->getString(14)));
+                itemSporazum->setText(17, QString::fromStdString(rs->getString(15)));
+                itemSporazum->setText(18, QString::fromStdString(rs->getString(16)));
+                itemSporazum->setText(19, QString::fromStdString(rs->getString(17)));
+                itemSporazum->setText(20, QString::number(rs->getInt(18)));
+                itemSporazum->setText(21, QString::number(rs->getInt(19)));
+                itemSporazum->setText(22, QString::number(rs->getUInt(20)));
+                itemSporazum->setText(23, QString::fromStdString(rs->getString(21)));
                 listSporazumLista.append(itemSporazum);
 
                 QTreeWidgetItem *itemSporazumstavka = new QTreeWidgetItem();
@@ -1779,14 +1812,26 @@ void FrmPregledN::popuniSporazumListu()
                     }
                 }
                 itemSporazumstavka->setText(3, QString::number(rs->getUInt(1)));
-                itemSporazumstavka->setText(4, QString::number(rs->getUInt(20)));
-                itemSporazumstavka->setText(5, QString::fromStdString(rs->getString(5)));
-                itemSporazumstavka->setText(6, QString::fromStdString(rs->getString(6)));
-                itemSporazumstavka->setText(7, QString::fromStdString(rs->getString(2)));
-                itemSporazumstavka->setText(8, QString::fromStdString(rs->getString(12)));
-                itemSporazumstavka->setText(9, QString::number(rs->getInt(18)));
-                itemSporazumstavka->setText(10, QString::number(rs->getInt(19)));
-                itemSporazumstavka->setText(11, QString::number(rs->getUInt(4)));
+                itemSporazumstavka->setText(4, QString::fromStdString(rs->getString(2)));
+                itemSporazumstavka->setText(5, QString::number(rs->getUInt(3)));
+                itemSporazumstavka->setText(6, QString::number(rs->getUInt(4)));
+                itemSporazumstavka->setText(7, QString::fromStdString(rs->getString(5)));
+                itemSporazumstavka->setText(8, QString::fromStdString(rs->getString(6)));
+                itemSporazumstavka->setText(9, QString::fromStdString(rs->getString(7)));
+                itemSporazumstavka->setText(10, QString::fromStdString(rs->getString(8)));
+                itemSporazumstavka->setText(11, QString::fromStdString(rs->getString(9)));
+                itemSporazumstavka->setText(12, QString::number(rs->getUInt(10)));
+                itemSporazumstavka->setText(13, QString::number(rs->getUInt(11)));
+                itemSporazumstavka->setText(14, QString::fromStdString(rs->getString(12)));
+                itemSporazumstavka->setText(15, QString::fromStdString(rs->getString(13)));
+                itemSporazumstavka->setText(16, QString::fromStdString(rs->getString(14)));
+                itemSporazumstavka->setText(17, QString::fromStdString(rs->getString(15)));
+                itemSporazumstavka->setText(18, QString::fromStdString(rs->getString(16)));
+                itemSporazumstavka->setText(19, QString::fromStdString(rs->getString(17)));
+                itemSporazumstavka->setText(20, QString::number(rs->getInt(18)));
+                itemSporazumstavka->setText(21, QString::number(rs->getInt(19)));
+                itemSporazumstavka->setText(22, QString::number(rs->getUInt(20)));
+                itemSporazumstavka->setText(23, QString::fromStdString(rs->getString(21)));
                 listSporazumLista.append(itemSporazumstavka);
                 itemSporazum->addChild(itemSporazumstavka);
             }
@@ -1853,14 +1898,26 @@ void FrmPregledN::popuniSporazumListu()
                             }
                         }
                         itemSporazum->setText(3, QString::number(rs->getUInt(1)));
-                        itemSporazum->setText(4, QString::number(rs->getUInt(20)));
-                        itemSporazum->setText(5, QString::fromStdString(rs->getString(5)));
-                        itemSporazum->setText(6, QString::fromStdString(rs->getString(6)));
-                        itemSporazum->setText(7, QString::fromStdString(rs->getString(2)));
-                        itemSporazum->setText(8, QString::fromStdString(rs->getString(12)));
-                        itemSporazum->setText(9, QString::number(rs->getInt(18)));
-                        itemSporazum->setText(10, QString::number(rs->getInt(19)));
-                        itemSporazum->setText(11, QString::number(rs->getUInt(4)));
+                        itemSporazum->setText(4, QString::fromStdString(rs->getString(2)));
+                        itemSporazum->setText(5, QString::number(rs->getUInt(3)));
+                        itemSporazum->setText(6, QString::number(rs->getUInt(4)));
+                        itemSporazum->setText(7, QString::fromStdString(rs->getString(5)));
+                        itemSporazum->setText(8, QString::fromStdString(rs->getString(6)));
+                        itemSporazum->setText(9, QString::fromStdString(rs->getString(7)));
+                        itemSporazum->setText(10, QString::fromStdString(rs->getString(8)));
+                        itemSporazum->setText(11, QString::fromStdString(rs->getString(9)));
+                        itemSporazum->setText(12, QString::number(rs->getUInt(10)));
+                        itemSporazum->setText(13, QString::number(rs->getUInt(11)));
+                        itemSporazum->setText(14, QString::fromStdString(rs->getString(12)));
+                        itemSporazum->setText(15, QString::fromStdString(rs->getString(13)));
+                        itemSporazum->setText(16, QString::fromStdString(rs->getString(14)));
+                        itemSporazum->setText(17, QString::fromStdString(rs->getString(15)));
+                        itemSporazum->setText(18, QString::fromStdString(rs->getString(16)));
+                        itemSporazum->setText(19, QString::fromStdString(rs->getString(17)));
+                        itemSporazum->setText(20, QString::number(rs->getInt(18)));
+                        itemSporazum->setText(21, QString::number(rs->getInt(19)));
+                        itemSporazum->setText(22, QString::number(rs->getUInt(20)));
+                        itemSporazum->setText(23, QString::fromStdString(rs->getString(21)));
                         listSporazumLista.append(itemSporazum);
                         listSporazumLista.at(i)->addChild(itemSporazum);
                         bPostoji = true;
@@ -1873,14 +1930,26 @@ void FrmPregledN::popuniSporazumListu()
                     itemSporazum->setIcon(1, m_iconTransparent);
                     itemSporazum->setIcon(2, m_iconTransparent);
                     itemSporazum->setText(3, QString::number(rs->getUInt(1)));
-                    itemSporazum->setText(4, QString::number(rs->getUInt(20)));
-                    itemSporazum->setText(5, QString::fromStdString(rs->getString(5)));
-                    itemSporazum->setText(6, QString::fromStdString(rs->getString(6)));
-                    itemSporazum->setText(7, QString::fromStdString(rs->getString(2)));
-                    itemSporazum->setText(8, QString::fromStdString(rs->getString(12)));
-                    itemSporazum->setText(9, QString::number(rs->getInt(18)));
-                    itemSporazum->setText(10, QString::number(rs->getInt(19)));
-                    itemSporazum->setText(11, QString::number(rs->getUInt(4)));
+                    itemSporazum->setText(4, QString::fromStdString(rs->getString(2)));
+                    itemSporazum->setText(5, QString::number(rs->getUInt(3)));
+                    itemSporazum->setText(6, QString::number(rs->getUInt(4)));
+                    itemSporazum->setText(7, QString::fromStdString(rs->getString(5)));
+                    itemSporazum->setText(8, QString::fromStdString(rs->getString(6)));
+                    itemSporazum->setText(9, QString::fromStdString(rs->getString(7)));
+                    itemSporazum->setText(10, QString::fromStdString(rs->getString(8)));
+                    itemSporazum->setText(11, QString::fromStdString(rs->getString(9)));
+                    itemSporazum->setText(12, QString::number(rs->getUInt(10)));
+                    itemSporazum->setText(13, QString::number(rs->getUInt(11)));
+                    itemSporazum->setText(14, QString::fromStdString(rs->getString(12)));
+                    itemSporazum->setText(15, QString::fromStdString(rs->getString(13)));
+                    itemSporazum->setText(16, QString::fromStdString(rs->getString(14)));
+                    itemSporazum->setText(17, QString::fromStdString(rs->getString(15)));
+                    itemSporazum->setText(18, QString::fromStdString(rs->getString(16)));
+                    itemSporazum->setText(19, QString::fromStdString(rs->getString(17)));
+                    itemSporazum->setText(20, QString::number(rs->getInt(18)));
+                    itemSporazum->setText(21, QString::number(rs->getInt(19)));
+                    itemSporazum->setText(22, QString::number(rs->getUInt(20)));
+                    itemSporazum->setText(23, QString::fromStdString(rs->getString(21)));
                     listSporazumLista.append(itemSporazum);
 
                     QTreeWidgetItem *itemSporazumstavka = new QTreeWidgetItem();
@@ -1938,14 +2007,26 @@ void FrmPregledN::popuniSporazumListu()
                         }
                     }
                     itemSporazumstavka->setText(3, QString::number(rs->getUInt(1)));
-                    itemSporazumstavka->setText(4, QString::number(rs->getUInt(20)));
-                    itemSporazumstavka->setText(5, QString::fromStdString(rs->getString(5)));
-                    itemSporazumstavka->setText(6, QString::fromStdString(rs->getString(6)));
-                    itemSporazumstavka->setText(7, QString::fromStdString(rs->getString(2)));
-                    itemSporazumstavka->setText(8, QString::fromStdString(rs->getString(12)));
-                    itemSporazumstavka->setText(9, QString::number(rs->getInt(18)));
-                    itemSporazumstavka->setText(10, QString::number(rs->getInt(19)));
-                    itemSporazumstavka->setText(11, QString::number(rs->getUInt(4)));
+                    itemSporazumstavka->setText(4, QString::fromStdString(rs->getString(2)));
+                    itemSporazumstavka->setText(5, QString::number(rs->getUInt(3)));
+                    itemSporazumstavka->setText(6, QString::number(rs->getUInt(4)));
+                    itemSporazumstavka->setText(7, QString::fromStdString(rs->getString(5)));
+                    itemSporazumstavka->setText(8, QString::fromStdString(rs->getString(6)));
+                    itemSporazumstavka->setText(9, QString::fromStdString(rs->getString(7)));
+                    itemSporazumstavka->setText(10, QString::fromStdString(rs->getString(8)));
+                    itemSporazumstavka->setText(11, QString::fromStdString(rs->getString(9)));
+                    itemSporazumstavka->setText(12, QString::number(rs->getUInt(10)));
+                    itemSporazumstavka->setText(13, QString::number(rs->getUInt(11)));
+                    itemSporazumstavka->setText(14, QString::fromStdString(rs->getString(12)));
+                    itemSporazumstavka->setText(15, QString::fromStdString(rs->getString(13)));
+                    itemSporazumstavka->setText(16, QString::fromStdString(rs->getString(14)));
+                    itemSporazumstavka->setText(17, QString::fromStdString(rs->getString(15)));
+                    itemSporazumstavka->setText(18, QString::fromStdString(rs->getString(16)));
+                    itemSporazumstavka->setText(19, QString::fromStdString(rs->getString(17)));
+                    itemSporazumstavka->setText(20, QString::number(rs->getInt(18)));
+                    itemSporazumstavka->setText(21, QString::number(rs->getInt(19)));
+                    itemSporazumstavka->setText(22, QString::number(rs->getUInt(20)));
+                    itemSporazumstavka->setText(23, QString::fromStdString(rs->getString(21)));
                     listSporazumLista.append(itemSporazumstavka);
                     itemSporazum->addChild(itemSporazumstavka);
                 }
@@ -2137,6 +2218,7 @@ void FrmPregledN::popuniSporazumListu()
     ui->lblSporazumId->setText(QString::number(m_iSporazumId));
     m_iSporazumSlogId = listSporazumLista.first()->text(4).toUInt();
     popunaSporazumSlog();
+    popunaSporazumStavki();
     popunaKupca();
 }
 void FrmPregledN::popunaSporazumSlog()
@@ -2201,6 +2283,8 @@ void FrmPregledN::popunaSporazumSlog()
             m_strBrojDokumenta = rs->getString(2);
             m_dateDatumzahtjeva = QDateTime::fromString(QString::fromStdString(rs->getString(12)), tr("dd.MM.yyyy hh:mm"));
             ui->lblSporazumDatumzadnjeIzmjene->setText(QString::fromStdString(rs->getString(13)));
+            ui->lblUgovorStatus->setText(QString::fromStdString(rs->getString(8)));
+            ui->lblUgovorBillingStatus->setText(QString::fromStdString(rs->getString(9)));
 
             switch (rs->getInt(18)) {
             case 0:
@@ -2243,7 +2327,9 @@ void FrmPregledN::popunaSporazumSlog()
             }
         }
 
-        ui->lblOpis->setText(QString::fromStdString(rs->getString(7)) +
+        ui->lblOpis->setText(ui->lblOpis->text() +
+                             tr("\n") +
+                             QString::fromStdString(rs->getString(7)) +
                              tr("\n") +
                              QString::fromStdString(rs->getString(17)));
 
@@ -2278,11 +2364,6 @@ void FrmPregledN::popunaSporazumSlog()
         }
         default:
             break;
-    }
-
-    if(m_iPregledAktivnosti != 0)
-    {
-        popunaSporazumStavki();
     }
 }
 void FrmPregledN::popunaWwmsGreska()
@@ -2462,7 +2543,8 @@ void FrmPregledN::popunaSporazumStavki()
 
         while(rs->next())
         {
-            int iId = rs->getInt(1);
+            //int iId = rs->getInt(1);
+            int iNadId = rs->getInt(2);
             int iGrupaProduktaId = rs->getInt(12);
 
 
@@ -2489,7 +2571,7 @@ void FrmPregledN::popunaSporazumStavki()
                 bool bNovaStavka = true;
                 for(int i = 0; i < iListSize; ++i)
                 {
-                    if(listSporazumStavke.at(i)->text(1).toInt() == iId)
+                    if(listSporazumStavke.at(i)->text(1).toInt() == iNadId)
                     {
                         QTreeWidgetItem *itemSporazumStavka = new QTreeWidgetItem();
                         itemSporazumStavka->setText(0, QString::fromStdString(rs->getString(10)));
@@ -2555,14 +2637,14 @@ void FrmPregledN::popunaSporazumStavki()
 // [Event Handlers]
 void FrmPregledN::on_btnPregledAktivnosti_clicked()
 {
-    if(m_iPregledAktivnosti == 0)
+    if(m_iPregledAktivnosti != 0)
     {
         ui->lblAktivnostPregledTitle->setText(tr("AKTIVNOSTI"));
         ui->fraAktivnosti->setVisible(true);
         ui->fraRazlog->setVisible(true);
         ui->fraPotvrdaAktivnosti->setVisible(true);
         ui->fraStavke->setVisible(false);
-        m_iPregledAktivnosti = 1;
+        m_iPregledAktivnosti = 0;
     }
     else
     {
@@ -2571,7 +2653,7 @@ void FrmPregledN::on_btnPregledAktivnosti_clicked()
         ui->fraRazlog->setVisible(false);
         ui->fraPotvrdaAktivnosti->setVisible(false);
         ui->fraStavke->setVisible(true);
-        m_iPregledAktivnosti = 0;
+        m_iPregledAktivnosti = 1;
         popunaSporazumStavki();
     }
 }
@@ -2758,7 +2840,7 @@ void FrmPregledN::on_treeSporazumi_itemPressed(QTreeWidgetItem *item, int UNUSED
 void FrmPregledN::on_treeSporazumLista_itemPressed(QTreeWidgetItem *item, int UNUSED(column))
 {
     initSlog();
-    m_iSporazumSlogId = item->text(4).toUInt();
+    m_iSporazumSlogId = item->text(22).toUInt();
     popunaSporazumSlog();
 }
 
@@ -2844,8 +2926,109 @@ void FrmPregledN::on_btnTrazi_clicked()
     }
 }
 
+void FrmPregledN::on_btnStatusDonat_clicked()
+{
+    if(m_iSporazumId == 0)
+    {
+        return;
+    }
+
+    // Show Donat pregled zahtjeva new
+    Sporazumi::FrmDonatPregled *frmDonatPregled = new Sporazumi::FrmDonatPregled(m_iSporazumId, this);
+    //frmDonatPregled->show();
+    frmDonatPregled->exec();
+    delete frmDonatPregled;
+}
+
+void FrmPregledN::on_btnStatusWwms_clicked()
+{
+    if(m_iSporazumId == 0)
+    {
+        return;
+    }
+
+    // Show Donat pregled zahtjeva new
+    Sporazumi::FrmWwmsPregled *frmWwmsPregled = new Sporazumi::FrmWwmsPregled(m_iSporazumId, 1, this);
+    //frmWwmsPregled->show();
+    frmWwmsPregled->exec();
+    delete frmWwmsPregled;
+}
+
+void FrmPregledN::on_btnDonatProcesi_clicked()
+{
+    if(m_iSporazumId == 0)
+    {
+        return;
+    }
+
+    // Show Donat pregled zahtjeva new
+    Sporazumi::FrmPregledProcesa *frmPregledProcesa = new Sporazumi::FrmPregledProcesa(m_iSporazumId, this);
+    //frmPregledProcesa->show();
+    frmPregledProcesa->exec();
+    delete frmPregledProcesa;
+}
+
+void FrmPregledN::on_btnDonatDetaljno_clicked()
+{
+    if(m_iSporazumId == 0)
+    {
+        return;
+    }
+
+    // Show Donat pregled zahtjeva new
+    Sporazumi::FrmPregledSporazuma *frmPregledSporazuma = new Sporazumi::FrmPregledSporazuma(m_iSporazumId, this);
+    //frmPregledSporazuma->show();
+    frmPregledSporazuma->exec();
+    delete frmPregledSporazuma;
+}
+
+void FrmPregledN::on_btnDonatNapomena_clicked()
+{
+
+}
+
+void FrmPregledN::on_btnDonatDatoteke_clicked()
+{
+
+}
+
+void FrmPregledN::on_btnDonatSpis_clicked()
+{
+
+}
+
+void FrmPregledN::on_btnDonatJop_clicked()
+{
+
+}
+
+void FrmPregledN::on_pushDonatDodijeliJop_clicked()
+{
+
+}
+
+void FrmPregledN::on_btnDonatDokument_clicked()
+{
+
+}
+
+void FrmPregledN::on_btnUlaznePoruke_clicked()
+{
+
+}
+
+void FrmPregledN::on_btnKanalProdaje_2_clicked()
+{
+
+}
+
+void FrmPregledN::on_btnDatumZahtjeva_clicked()
+{
+
+}
 
 } // namespace sporazumi
+
 
 
 

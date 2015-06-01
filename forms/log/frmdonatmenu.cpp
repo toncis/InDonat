@@ -3665,8 +3665,9 @@ void FrmDonatMenu::on_btnMnuPregledPregledN_clicked()
 {
     // Show Donat pregled zahtjeva newr
     Sporazumi::FrmPregledN *frmDonatZahtjeviPregledN = new Sporazumi::FrmPregledN(this);
-    frmDonatZahtjeviPregledN->exec();
-    delete frmDonatZahtjeviPregledN;
+    frmDonatZahtjeviPregledN->show();
+//    frmDonatZahtjeviPregledN->exec();
+//    delete frmDonatZahtjeviPregledN;
 }
 void FrmDonatMenu::on_btnMnuPregledPregledKon_clicked()
 {

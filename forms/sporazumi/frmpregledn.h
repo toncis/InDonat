@@ -98,6 +98,32 @@ private slots:
 
     void on_treeSporazumLista_itemPressed(QTreeWidgetItem *item, int column);
 
+    void on_btnStatusDonat_clicked();
+
+    void on_btnStatusWwms_clicked();
+
+    void on_btnDonatProcesi_clicked();
+
+    void on_btnDonatDetaljno_clicked();
+
+    void on_btnDonatNapomena_clicked();
+
+    void on_btnDonatDatoteke_clicked();
+
+    void on_btnDonatSpis_clicked();
+
+    void on_btnDonatJop_clicked();
+
+    void on_pushDonatDodijeliJop_clicked();
+
+    void on_btnDonatDokument_clicked();
+
+    void on_btnUlaznePoruke_clicked();
+
+    void on_btnKanalProdaje_2_clicked();
+
+    void on_btnDatumZahtjeva_clicked();
+
 private:
     Ui::FrmPregledN *ui;
 
