@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1233</width>
-    <height>855</height>
+    <height>868</height>
    </rect>
   </property>
   <property name="font">
@@ -3579,13 +3579,13 @@
                </font>
               </property>
               <property name="toolTip">
-               <string>Poziv Na Broj</string>
+               <string/>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
               </property>
               <property name="text">
-               <string>ZAHTJEV</string>
+               <string/>
               </property>
               <property name="textInteractionFlags">
                <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
@@ -3686,7 +3686,7 @@
                </font>
               </property>
               <property name="toolTip">
-               <string>Poziv Na Broj</string>
+               <string>Kupac ID.</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
@@ -3717,7 +3717,7 @@
                </font>
               </property>
               <property name="toolTip">
-               <string>Poziv Na Broj</string>
+               <string>Formatirani naziv kupca.</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
@@ -3978,7 +3978,7 @@
                      </font>
                     </property>
                     <property name="toolTip">
-                     <string>Poziv Na Broj</string>
+                     <string>Sporazum ID.</string>
                     </property>
                     <property name="frameShape">
                      <enum>QFrame::StyledPanel</enum>
@@ -4043,7 +4043,7 @@
                      </font>
                     </property>
                     <property name="toolTip">
-                     <string>Poziv Na Broj</string>
+                     <string>Ticket ID.</string>
                     </property>
                     <property name="frameShape">
                      <enum>QFrame::StyledPanel</enum>
@@ -4333,7 +4333,7 @@
                            </font>
                           </property>
                           <property name="toolTip">
-                           <string>Poziv Na Broj</string>
+                           <string>Grupa Imovine ID</string>
                           </property>
                           <property name="frameShape">
                            <enum>QFrame::StyledPanel</enum>
@@ -4431,7 +4431,7 @@
                            </font>
                           </property>
                           <property name="toolTip">
-                           <string>Poziv Na Broj</string>
+                           <string>Status</string>
                           </property>
                           <property name="frameShape">
                            <enum>QFrame::StyledPanel</enum>
@@ -4496,7 +4496,7 @@
                            </font>
                           </property>
                           <property name="toolTip">
-                           <string>Poziv Na Broj</string>
+                           <string>Aktivnost.</string>
                           </property>
                           <property name="frameShape">
                            <enum>QFrame::StyledPanel</enum>
@@ -4594,7 +4594,7 @@
                            </font>
                           </property>
                           <property name="toolTip">
-                           <string>Poziv Na Broj</string>
+                           <string>Poslovni Proces ID.</string>
                           </property>
                           <property name="frameShape">
                            <enum>QFrame::StyledPanel</enum>
@@ -4659,7 +4659,7 @@
                            </font>
                           </property>
                           <property name="toolTip">
-                           <string>Poziv Na Broj</string>
+                           <string>Promjena</string>
                           </property>
                           <property name="frameShape">
                            <enum>QFrame::StyledPanel</enum>
@@ -4757,7 +4757,7 @@
                            </font>
                           </property>
                           <property name="toolTip">
-                           <string>Poziv Na Broj</string>
+                           <string>Provisioning status.</string>
                           </property>
                           <property name="frameShape">
                            <enum>QFrame::StyledPanel</enum>
@@ -4855,7 +4855,7 @@
                            </font>
                           </property>
                           <property name="toolTip">
-                           <string>Poziv Na Broj</string>
+                           <string>Billing status.</string>
                           </property>
                           <property name="frameShape">
                            <enum>QFrame::StyledPanel</enum>
@@ -4955,7 +4955,7 @@
               <property name="minimumSize">
                <size>
                 <width>125</width>
-                <height>27</height>
+                <height>60</height>
                </size>
               </property>
               <property name="font">
@@ -4965,10 +4965,13 @@
                </font>
               </property>
               <property name="toolTip">
-               <string>Poziv Na Broj</string>
+               <string>Detaljan opis uparen sa WWMS statusima.</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
               </property>
               <property name="textInteractionFlags">
                <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
@@ -5079,10 +5082,10 @@
                <string>Identifikacija korisnika</string>
               </property>
               <property name="statusTip">
-               <string>Identifikacija korisnika</string>
+               <string/>
               </property>
               <property name="whatsThis">
-               <string>Identifikacija korisnika</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -5180,7 +5183,7 @@
                </font>
               </property>
               <property name="toolTip">
-               <string>Poziv Na Broj</string>
+               <string/>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
@@ -5226,10 +5229,10 @@
                <string>Filter naziv.</string>
               </property>
               <property name="statusTip">
-               <string>Filter naziv.</string>
+               <string>Prikazi aktivnosti.</string>
               </property>
               <property name="whatsThis">
-               <string>Filter naziv.</string>
+               <string>Prikazi aktivnosti.</string>
               </property>
               <property name="text">
                <string/>
@@ -5250,7 +5253,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QFrame" name="frame_33">
+          <widget class="QFrame" name="fraAktivnosti">
            <property name="frameShape">
             <enum>QFrame::NoFrame</enum>
            </property>
@@ -5290,7 +5293,7 @@
                <bool>true</bool>
               </property>
               <property name="columnCount">
-               <number>11</number>
+               <number>17</number>
               </property>
               <column>
                <property name="text">
@@ -5347,13 +5350,43 @@
                 <string notr="true">11</string>
                </property>
               </column>
+              <column>
+               <property name="text">
+                <string notr="true">12</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">13</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">14</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">15</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">16</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">17</string>
+               </property>
+              </column>
              </widget>
             </item>
            </layout>
           </widget>
          </item>
          <item>
-          <widget class="QFrame" name="frame_32">
+          <widget class="QFrame" name="fraRazlog">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -5443,7 +5476,7 @@
                </font>
               </property>
               <property name="toolTip">
-               <string>Poziv Na Broj</string>
+               <string>Razlog promjene.</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
@@ -5457,7 +5490,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QFrame" name="frame_31">
+          <widget class="QFrame" name="fraPotvrdaAktivnosti">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
              <horstretch>0</horstretch>
@@ -5590,10 +5623,10 @@
                <string>Identifikacija korisnika</string>
               </property>
               <property name="statusTip">
-               <string>Identifikacija korisnika</string>
+               <string/>
               </property>
               <property name="whatsThis">
-               <string>Identifikacija korisnika</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -5679,7 +5712,7 @@
                <bool>true</bool>
               </property>
               <property name="columnCount">
-               <number>2</number>
+               <number>6</number>
               </property>
               <column>
                <property name="text">
@@ -5689,6 +5722,26 @@
               <column>
                <property name="text">
                 <string notr="true">2</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">3</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">4</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">5</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string notr="true">6</string>
                </property>
               </column>
              </widget>

@@ -119,6 +119,7 @@ private:
     int m_iTipFiltra;
     int m_iTipDodatnogFiltra;
     int m_iFltLinijaProdukataId;
+    int m_iPregledAktivnosti;
 
     int m_iListaTipId;
     string m_strListaValue;
@@ -154,6 +155,7 @@ private:
     void popunaWwmsStorno();
     void popunaSporazumAktivnosti();
     void popunaOstalo();
+    void popunaSporazumStavki();
 
     void addNewGrupaToListGrupe(QList<QTreeWidgetItem *> listListaGrupa, QTreeWidgetItem *itemGrupa);
 
