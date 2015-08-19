@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>FrmDonatMenu</class>
  <widget class="QMainWindow" name="FrmDonatMenu">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
   <property name="enabled">
    <bool>true</bool>
   </property>
@@ -373,7 +376,7 @@
                <x>0</x>
                <y>0</y>
                <width>166</width>
-               <height>864</height>
+               <height>918</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -430,8 +433,8 @@
                  <property name="geometry">
                   <rect>
                    <x>0</x>
-                   <y>-54</y>
-                   <width>153</width>
+                   <y>0</y>
+                   <width>166</width>
                    <height>270</height>
                   </rect>
                  </property>
@@ -1488,7 +1491,7 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>153</width>
+                   <width>166</width>
                    <height>222</height>
                   </rect>
                  </property>
@@ -1803,7 +1806,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>166</width>
-                   <height>216</height>
+                   <height>270</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -1820,7 +1823,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>166</width>
-                   <height>216</height>
+                   <height>270</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -1914,7 +1917,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>166</width>
-                   <height>216</height>
+                   <height>270</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -1931,7 +1934,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>166</width>
-                   <height>216</height>
+                   <height>270</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -1948,7 +1951,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>166</width>
-                   <height>216</height>
+                   <height>270</height>
                   </rect>
                  </property>
                  <property name="sizePolicy">
@@ -2045,7 +2048,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>166</width>
-                   <height>216</height>
+                   <height>270</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -2293,7 +2296,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>166</width>
-                   <height>216</height>
+                   <height>270</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -2310,7 +2313,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>166</width>
-                   <height>216</height>
+                   <height>270</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -2327,7 +2330,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>166</width>
-                   <height>216</height>
+                   <height>270</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -2344,7 +2347,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>166</width>
-                   <height>216</height>
+                   <height>270</height>
                   </rect>
                  </property>
                  <attribute name="icon">

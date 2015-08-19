@@ -91,7 +91,7 @@ void FrmDonatUserLogin::CreateFormUserLogin()
     // m_txtDonatUserPasswd = new QLineEdit();
 //    m_txtDonatUserPasswd = new QLineEdit(tr("donat"));
 //    m_txtDonatUserPasswd = new QLineEdit(tr("ZXhiCO4x"));
-    m_txtDonatUserPasswd = new QLineEdit(tr("asdf444$"));
+    m_txtDonatUserPasswd = new QLineEdit(tr("Mario12#"));
     m_txtDonatUserPasswd->setEchoMode(QLineEdit::Password);
     m_cboDonatDatabase = new QComboBox();
     m_cboDonatDatabase->setEditable(TRUE);
@@ -251,7 +251,7 @@ void FrmDonatUserLogin::on_cboDatabase_currentIndexChanged(const QString &strDon
     else if(strDonatDatabase == tr("SDONAT_PROD"))
     {
         m_txtDonatUserName->setText(tr("DEV_MJELIC"));
-        m_txtDonatUserPasswd->setText(tr("asdf444$"));
+        m_txtDonatUserPasswd->setText(tr("Mario12#"));
     }
     else
     {
