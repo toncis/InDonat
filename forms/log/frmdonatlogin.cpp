@@ -39,7 +39,7 @@ FrmDonatLogin::FrmDonatLogin(QWidget *parent) :
     ui->cboDatabase->addItem("DONAT_RAZVOJ", QVariant::String);
     ui->cboDatabase->addItem("DONAT_TRENING", QVariant::String);
     ui->txtUserName->setText("DEV_MJELIC");
-    ui->txtUserPassword->setText("Mario12#");
+    ui->txtUserPassword->setText("Mario2015#");
     ui->btnLogin->setFocus();
     ui->imgDonatTht->setVisible(false);
 }
@@ -179,7 +179,7 @@ void FrmDonatLogin::on_cboDatabase_currentIndexChanged(const QString &strDonatDa
     else if(strDonatDatabase == tr("SDONAT_PROD"))
     {
         ui->txtUserName->setText(tr("DEV_MJELIC"));
-        ui->txtUserPassword->setText(tr("Mario12#"));
+        ui->txtUserPassword->setText(tr("Mario2015#"));
     }
     else
     {
