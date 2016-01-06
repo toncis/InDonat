@@ -218,8 +218,9 @@ RESOURCES += \
 
 unix:
 # The ORACLE OCI library
-LIBS += -L/$$(ORACLE_HOME)/lib -locci
-LIBS += -L/usr/local/lib -lclntsh
+LIBS += -L$$(ORACLE_HOME)lib -locci
+#LIBS += -L/usr/local/lib -lclntsh
+LIBS += -L$$(ORACLE_HOME)lib -lclntsh
 
 INCLUDEPATH += $$quote($$(ORACLE_HOME)/include)
 
